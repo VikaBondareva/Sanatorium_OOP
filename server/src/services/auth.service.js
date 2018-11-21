@@ -1,21 +1,33 @@
 const config = require('../config/config');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const db = require('../_helpers/db');
 const User = db.User;
+const Roles=db.Roles;
+const UserRole= db.UserRole;
+
+
+const roleAdmin = Roles.findOne({name: "ROLE_ADMIN"});
+
 
 module.exports = {
     authenticate,
     create,
     getAll,
-    getById
+    getById,
+    update,
+    _delete
 }
+
+
+const ONE_WEEK = 60*60*24*7;
 
 async function authenticate({email, password}) {
     const user = await User.findOne({email});
-    if(user && bcrypt.compareSync(password, user.hash)){
-        const { hash, ...userWithoutHash} = user.toObjesct();
-        const token = jwt.sign({sub: user.id}, config.authentication.jwtSecret);
+    if(user && bcrypt.compareSync(password, user.password)){
+        const { hash, ...userWithoutHash} = user.toObject();
+        const token = jwt.sign({sub: user.id}, config.authentication.jwtSecret,{
+        expiresIn: ONE_WEEK});
         return {
             ...userWithoutHash,
             token
@@ -37,12 +49,17 @@ async function create(userParam){
     }
     
     const user = new User(userParam);
+    // const roleUser = await Roles.findOne({role: "ROLE_USER"});
+    // const userRole = new UserRole({role_id: roleUser._id, user_id: user._id});
     
+    // await userRole.save();
     if(userParam.password){
-        user.hash= bcrypt.hashSync(userParam.password,10);
+        user.password = bcrypt.hashSync(userParam.password,10);
     }
     
-    await user.save();
+    await user.save()
+
+
 }
 
 async function update(id, userParam){
@@ -53,7 +70,7 @@ async function update(id, userParam){
     }
     
     if(user.email !== userParam.email && await User.findOne({email: userParam.email})){
-        userParam.hash = bcrypt.hashSync(userParam.password,10);
+        userParam.password = bcrypt.hashSync(userParam.password,10);
     }
     
     Object.assign(user,userParam);

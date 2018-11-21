@@ -1,23 +1,30 @@
-const express = require('express')
-const bodyParser= require('body-parser')
-const cors= require('cors')
-const morgan = require('morgan')
-const config= require('./config/config')
-const mongoose=require('mongoose')
-const auth= require('./routes/auth')
+const express = require('express');
+const bodyParser= require('body-parser');
+const cors= require('cors');
+const morgan = require('morgan');
+const config= require('./config/config');
+const mongoose=require('mongoose');
+const {user,auth}= require('./routes/index.js');
+const errorHandler = require('./_helpers/error-handler');
+const jwt = require('./_helpers/jwt');
+
 mongoose.Promise=global.Promise;
 
 const app= express();
 
 app.use(morgan('combined'));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(auth)
+app.use(user);
+app.use(auth);
 
-//require('./passport')
-//require('./routes/auth')(app)
+app.use(errorHandler);
+app.use(jwt());
 
-mongoose.connect(config.dbURL, config.dbOptions)
+
+//start server
+mongoose.connect(config.dbURL, config.dbOptions);
 
 mongoose.connection
     .once('open',()=>{

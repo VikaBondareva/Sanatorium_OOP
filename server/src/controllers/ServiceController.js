@@ -1,46 +1,42 @@
-const authService = require('../services/auth.service');
+const serviceService = require('../services/service.service');
 
 module.exports={
-    login,
-    register,
-    getCurrent,
-    getById,
-    _delete,
-    getAll
+    add,
+    delete,
+    update,
+    getAll,
+    getById
 }
 
-function login(req, res, next){
-    authService.authenticate(req.body)
-        .then(user=>user? res.json(user): res.status(400).json({message: 'Email  or password is incorrect'}))
-        .catch(err=> next(err))
-}
 
-function register(req,res,next){
-    authService.create(req.body)
-        .then(()=> res.json({}))
-        .catch(err=>next(err))
-}
-
-function getCurrent(req, res, next){
-    authService.getById(req.user.sub)
-        .then(yser=> user? res.json(user): res.sendStatus(404))
-        .catch(err=> next(err))
+function add(req, res, next) {
+    serviceService.create(req.params.id)
+        .then(() => res.json({}))
+        .catch(err => next(err));
 }
 
 function getAll(req, res, next) {
-    authService.getAll()
+    serviceService.getAll()
         .then(users => res.json(users))
         .catch(err => next(err));
 }
 
 function getById(req, res, next){
-    authService.getById(req.params.id)
+    serviceService.getById(req.params.id)
         .then(user=>user? res.json(user): res.sendStatus(404))
         .catch(err=>next(err))
 }
 
-function _delete(req, res, next) {
-    authService.delete(req.params.id)
+function delete(req, res, next) {
+    serviceService.update(req.params.id)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+
+
+function delete(req, res, next) {
+    serviceService.delete(req.params.id)
         .then(() => res.json({}))
         .catch(err => next(err));
 }

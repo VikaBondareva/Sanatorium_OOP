@@ -53,9 +53,26 @@ var RoleScheme = new Schema({
     }
 })
 
+var UserRolesSchema = new Schema(
+    {
+        role_id: {
+            type: Number,
+            ref: "users"
+        },
+        user_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "roles"
+        }
+    }   
+)
+
 UserSchema.set('toJSON', { virtuals: true});
 
 var User = mongoose.model("users", UserSchema);
 var Roles= mongoose.model("roles", RoleScheme);
-module.exports.Roles=Roles;
-module.exports.User=User;
+var UserRole = mongoose.model("userRole", UserRolesSchema);
+module.exports={
+    User,
+    Roles,
+    UserRole
+}

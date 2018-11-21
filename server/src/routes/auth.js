@@ -10,6 +10,9 @@ module.exports = router;
     router.post('/api/login', AuthenticationController.login);
     router.post('/api/register', AuthenticationController.register);
     router.get('/api/users/current', AuthenticationController.getCurrent);
+    router.delete('/api/users/:id', AuthenticationController._delete);
+    router.get('/api/users', AuthenticationController.getAll);
+    router.get('/api/users/:id', AuthenticationController.getById);
 //    router.get('/api/users/:id',AuthenticationController.getById);
 
 
