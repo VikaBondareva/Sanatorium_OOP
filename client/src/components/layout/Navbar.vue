@@ -1,7 +1,7 @@
 <template>
 
   <v-toolbar dark color="primary">
-        <v-toolbar-title class="white--text">Санаториум</v-toolbar-title>
+        <v-toolbar-title class="white--text">Санаторий</v-toolbar-title>
         <v-spacer></v-spacer>
         <template v-if="isAuthenticated">
             <v-btn :small="true" @click="goToLoginPage">Войти</v-btn>

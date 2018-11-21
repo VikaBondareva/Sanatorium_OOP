@@ -51,10 +51,8 @@
                     ></v-text-field>
                 </form>
                 <br>
-                <div class="danger-alert" v-html="error" />
-                <br>
                 <v-btn dark class="cyan" @click="register">
-                    Register
+                    Регистрация
                 </v-btn>
         </v-flex>
     </v-layout>
@@ -77,6 +75,7 @@
                 error: null,
                 showPassword: false,
                 repeatPassword: "",
+                valid: false,
                 emailRegex: /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
                 rules: {
                     name: [v => !!v || "Введите имя!"],

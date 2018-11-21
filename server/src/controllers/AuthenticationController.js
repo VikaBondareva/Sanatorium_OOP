@@ -1,3 +1,34 @@
+const authService = require('../services/auth.service');
+
+module.exports={
+    login,
+    register,
+    getCurrent
+    
+}
+
+function login(req, res, next){
+    authService.authenticate(req.body)
+        .then(user=>user? res.json(user): res.status(400).json({message: 'Email  or password is incorrect'}))
+        .catch(err=> next(err))
+}
+
+function register(req,res,next){
+    authService.create(req.body)
+        .then(()=> res.json({}))
+        .catch(err=> next(err))
+}
+
+function getCurrent(req, res, next){
+    authService.getById(req.user.sub)
+        .then(yser=> user? res.json(user): res.sendStatus(404))
+        .catch(err=> next(err))
+}
+
+
+
+
+
 //const {User} = require('../models/user-model')
 //const jwt = require('jsonwebtoken')
 //const config = require('../config/config')

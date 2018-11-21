@@ -1,37 +1,49 @@
-const {User} = require('../models/user-model')
-//const AuthenticationController = require('../controllers/AuthenticationController')
+//const {User} = require('../models/user-model')
+const AuthenticationController = require('../controllers/AuthenticationController')
 //const AuthenticationControllerPolicy = require('../policies/AuthenticationControllerPolicy')
 const express = require('express')
 const router= express.Router()
 //const isAuthenticated = require('../policies/isAuthenticated')
 //
-//module.exports=(app)=>{
-//    app.post('/api/register',
-//            AuthenticationControllerPolicy.register,
-//            AuthenticationController.register)
-//    app.post('/api/login', 
-//            AuthenticationController.login)
-//}
+module.exports = router;
 
-router.post('/api/register', (req,res)=>{
-        const user = new User({
-            name: req.body.name,
-            surname: req.body.surname,
-            patronymic: req.body.patronymic,
-            email: req.body.email,
-            password: req.body.password
-        })
-        user.save((err, data)=>{
-            if(err){
-                console.log(err)
-            } else{
-                res.send({
-                    success: true,
-                    message: `User with ID_${data._id} saved successfully!`
-                })
-            }
-        })
-})
+    router.post('/api/login', AuthenticationController.login);
+    router.post('/api/register', AuthenticationController.register);
+    router.get('/api/users/current', AuthenticationController.getCurrent);
+//    router.get('/api/users/:id',AuthenticationController.getById);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//router.post('/api/register', (req,res)=>{
+//        const user = new User({
+//            name: req.body.name,
+//            surname: req.body.surname,
+//            patronymic: req.body.patronymic,
+//            email: req.body.email,
+//            password: req.body.password
+//        })
+//        user.save((err, data)=>{
+//            if(err){
+//                console.log(err)
+//            } else{
+//                res.send({
+//                    success: true,
+//                    message: `User with ID_${data._id} saved successfully!`
+//                })
+//            }
+//        })
+//})
 
 //router.post('/posts', (req, res)=>{
 //    const post = new Post({
@@ -102,4 +114,3 @@ router.post('/api/register', (req,res)=>{
 //  })
 //})
 
-module.exports=router

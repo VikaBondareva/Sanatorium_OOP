@@ -47,8 +47,8 @@ var ServiceTypeSchema = new Schema(
     { versionKey: false }
 )
 
-var type= mongoose.model('servicesTypes', ServiceTypeSchema)
-var Service= mongoose.model('services', ServiceTypeSchema)
-module.exports=Service
-module.exports=type
+var TypesService= mongoose.model('servicesTypes', ServiceTypeSchema)
+var Services= mongoose.model('services', ServiceTypeSchema)
+module.exports=Services
+module.exports=TypesService
 

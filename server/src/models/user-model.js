@@ -1,8 +1,6 @@
 var mongoose= require('mongoose')
 var Schema = mongoose.Schema
 
-mongoose.Promise = global.Promise;
- 
 var UserSchema = new Schema(
     {
         name: {
@@ -20,6 +18,7 @@ var UserSchema = new Schema(
         email: {
             type: String,
             required: true,
+            unique: true
         },
         password: {
             type: String,
@@ -31,7 +30,7 @@ var UserSchema = new Schema(
             ref: 'sanatoriumCards',
         },
 //        birth: {
-//            type: Data,
+//            type: Date,
 //            required: true
 //        },
         phone: {
@@ -53,6 +52,8 @@ var RoleScheme = new Schema({
         required: true
     }
 })
+
+UserSchema.set('toJSON', { virtuals: true});
 
 var User = mongoose.model("users", UserSchema);
 var Roles= mongoose.model("roles", RoleScheme);
