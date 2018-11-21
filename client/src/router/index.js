@@ -1,31 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-//import Start from '@/components/pages/StartPage'
-import Posts from '@/components/pages/PostsPage'
-import NewPost from '@/components/pages/NewPostPage'
-import EditPost from '@/components/pages/EditPostPage'
+import StartPage from '@/components/main/StarPage.vue'
+import Service from '@/components/main/Service.vue'
+import Login from '@/components/auth/Login.vue'
+import Registraion from '@/components/auth/Registration.vue'
+import ProfilePage from '@/components/user/ProfilePage.vue'
 
 Vue.use(Router)
 
 const routes = [
-//    {
-//      path: '/', name: 'Start', component: Start
-//    },
     {
-        path: '/posts',
-        name: 'Posts',
-        component: Posts
+        path: '/',
+        name: 'home',
+        component: StartPage
     },
     {
-        path: '/posts/new',
-        name: 'NewPost',
-        component: NewPost
+        path: '/login', name:'login',  component: Login  
     },
     {
-        path: 'posts/:id',
-        name: 'EditPost',
-        component: EditPost
+        path: '/registration', name: 'registration', component: Registraion
     }
   ]
 

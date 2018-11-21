@@ -1,0 +1,46 @@
+@font-face {
+    font-family: "EFN-Handy";
+    src: url(../fonts/EFN_Handy.otf)
+}
+
+html,
+body {
+    height: 100%;
+    overflow: auto !important;
+}
+
+.full-height {
+    min-height: 100%;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+body {
+    overflow: hidden;
+}
+
+.registration-container .v-card {
+    padding: 30px;
+}
+
+.font-efn-handy {
+    font-family: "EFN-Handy";
+    color: #2b86c6
+}
+
+.registration-container {
+    width: 750px !important;
+}
+
+@media screen and (max-width: 890px) {
+    .registration-container {
+        width: 450px !important;
+    }
+    .registration-container .v-card {
+        padding: 0px;
+    }
+}
