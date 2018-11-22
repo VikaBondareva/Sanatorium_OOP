@@ -5,20 +5,26 @@ const User = db.User;
 const Roles=db.Roles;
 
 const checkToken = (req,res,next) =>{
-    const token = req.headers['x-access-token'] || req.headers['authorization'];
+    let token = req.headers['x-access-token'] || req.headers['authorization'];
     if(token.startsWith('Bearer')){
-        token = token.slice(' ')[1];
+        token = token.slice(7, token.length);
     }
     
     if(token){
-        jwt.verify(token, config.authentication.secret, (err,decoded)=>{
+        jwt.verify(token, config.authentication.secret, (err,data)=>{
             if(err){
                 return res.json({
                     success: false,
-                    message: 'Token is not valid'
+                    message: token+' Token is not valid'
                 })
             } else {
-                res.decoded = decoded;
+                req.userId=data.sub
+//                res.json({
+//                    data: data,
+//                    success: true,
+//                    message: "this is protected",
+//                })   
+                    
                 next();
             }
         });
@@ -31,16 +37,16 @@ const checkToken = (req,res,next) =>{
 };
 
 const isAdmin = (req,res,next)=>{
-    User.findOne({_id: req.decoded_id})
+    User.findOne({_id: req.userId})
         .exec((err, user)=>{
             if(err){
-                if(err.kind === 'ObjectId'){
+                if(err.kind === 'sub'){
                    return res.status(404).send({
-					   message: "User not found with Username = " + req.body.email
+					   message: "User not found with email = " + req.body.email
 				    });     
                 }
                 return res.status(500).send({
-				    message: "Error retrieving User with Username = " + req.body.email
+				    message: "Error retrieving User with email = " + req.body.email
 			     });
             } else {
                 Roles.find({
@@ -50,7 +56,7 @@ const isAdmin = (req,res,next)=>{
                         res.status(500).send("Error -> " + err);
                     
                     for(let i=0; i<roles.length; i++){
-                        if(roles[i].name.toUpperCase()==="ADMIN"){
+                        if(roles[i].name==="ADMIN"){
                             next();
 					       return;
                         }

@@ -1,5 +1,6 @@
 var mongoose= require('mongoose')
 var Schema = mongoose.Schema
+const bcrypt = require('bcryptjs');
 
 var UserSchema = new Schema(
     {
@@ -56,16 +57,16 @@ var UserSchema = new Schema(
 //}
 //
 ////hashing a password before saving it to the database
-//UserSchema.pre('save', function (next) {
-//  var user = this;
-//  bcrypt.hash(user.password, 10, function (err, hash) {
-//    if (err) {
-//      return next(err);
-//    }
-//    user.password = hash;
-//    next();
-//  })
-//});
+UserSchema.pre('save', function (next) {
+  var user = this;
+  bcrypt.hash(user.password, 10, function (err, hash) {
+    if (err) {
+      return next(err);
+    }
+    user.password = hash;
+    next();
+  })
+});
 
 
 var RoleScheme = new Schema({

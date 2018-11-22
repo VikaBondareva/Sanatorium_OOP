@@ -22,8 +22,8 @@ function register(req,res,next){
 }
 
 function getCurrent(req, res, next){
-    authService.getById(req.user.sub)
-        .then(yser=> user? res.json(user): res.sendStatus(404))
+    authService.getById(req.userId)
+        .then(user=> user? res.json(user): res.sendStatus(404))
         .catch(err=> next(err))
 }
 

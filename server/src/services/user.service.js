@@ -13,13 +13,13 @@ async function update(id, userParam){
     
     if (!user) throw 'User not found';
     if (user.email !== userParam.email && await User.findOne({ email: userParam.email })) {
-        throw 'Username "' + userParam.username + '" is already taken';
+        throw 'Email "' + userParam.email + '" is already taken';
     }
 
     // hash password if it was entered
-    if (userParam.password) {
-        userParam.hash = bcrypt.hashSync(userParam.password, 10);
-    }
+//    if (userParam.password) {
+//        userParam.hash = bcrypt.hashSync(userParam.password, 10);
+//    }
 
     
     Object.assign(user,userParam);

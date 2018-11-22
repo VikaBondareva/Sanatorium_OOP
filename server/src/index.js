@@ -10,7 +10,7 @@ const config= require('./config/config');
 const mongoose=require('mongoose');
 const {user,auth, service}= require('./routes/index.js');
 const errorHandler = require('./_helpers/error-handler');
-const jwt = require('./_helpers/jwt');
+//const jwt = require('./_helpers/jwt');
 
 mongoose.Promise=global.Promise;
 
@@ -25,7 +25,7 @@ app.use(auth);
 app.use(service);
 
 app.use(errorHandler);
-app.use(jwt());
+//app.use(jwt());
 
 
 
