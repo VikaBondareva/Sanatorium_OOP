@@ -2,61 +2,73 @@ const config = require('../config/config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../_helpers/db');
-const Service = db.Service;
-const TypeService=db.TypesService;
+const Service = db.Services;
+const TypesService=db.TypesService;
 
 
 module.exports = {
-    create
-    getAll,
-    getById,
+    create,
+    getAllServices,
+    getByOneService,
     update,
-    delete
-}
+    _delete,
+    sortServicesOnTypes
+};
 
-
-
-
-async function getAll(){
+async function getAllServices(){
     return await Service.find()
 }
 
-async function getById(id){
+async function getByOneService(id){
     return await Service.findById(id)
 }
 
-async function create(serviceParam, type){
-    if(await Service.findOne({email: userParam.email})){
-        throw `Username ${serviceParam.email} is already taken`;
+async function create(serviceParam){
+    const name = serviceParam.name;
+    if(await Service.findOne({name: name})){
+        throw `Servise name '${name}' is already taken`;
     }
     
     const service = new Service(serviceParam);
-    // const roleUser = await Roles.findOne({role: "ROLE_USER"});
-    // const userRole = new UserRole({role_id: roleUser._id, user_id: user._id});
-    
-    // await userRole.save();
     
     await service.save()
-
-
 }
 
-async function update(id, userParam){
-    const user = await User.findById(id);
+async function update(id, serviceParam){
+    const service = await Service.findById(id);
     
-    if(!user){
-        throw 'User not found';
+    if(!service){
+        throw 'Service not found';
     }
     
-    if(user.email !== userParam.email && await User.findOne({email: userParam.email})){
-        userParam.password = bcrypt.hashSync(userParam.password,10);
-    }
+    Object.assign(service,serviceParam);
     
-    Object.assign(user,userParam);
-    
-    await user.save();
+    await service.save();
 }
 
 async function _delete(id){
-    await User.findByIdAndRemove(id);
+    await Service.findByIdAndRemove(id);
+}
+
+async function getListType(typeId){
+    return await Service.find({serviceType_id: typeId}).sort({price:1})
+}
+
+async function getSortServices(value, index, typeId){
+    const sorting = {value: index}
+    
+    return getListType(typeId).sort(sorting)
+}
+
+
+//////-------------
+async function sortServicesOnTypes(){
+    const types = await TypesService.find();
+    // const sortService = [];
+    // for(let i=0; i<types.length; i++){
+    //     sortService.push(getListType(types[i]._id));
+    // }
+
+    return types;
+    //return sortService;
 }

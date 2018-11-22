@@ -11,13 +11,16 @@ module.exports = {
 async function update(id, userParam){
     const user = await User.findById(id);
     
-    if(!user){
-        throw 'User not found';
+    if (!user) throw 'User not found';
+    if (user.email !== userParam.email && await User.findOne({ email: userParam.email })) {
+        throw 'Username "' + userParam.username + '" is already taken';
     }
-    
-    if(user.email !== userParam.email && await User.findOne({email: userParam.email})){
-        userParam.password = bcrypt.hashSync(userParam.password,10);
+
+    // hash password if it was entered
+    if (userParam.password) {
+        userParam.hash = bcrypt.hashSync(userParam.password, 10);
     }
+
     
     Object.assign(user,userParam);
     

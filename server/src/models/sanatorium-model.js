@@ -15,6 +15,19 @@ var CardSchema = new Schema (
         user_id:{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'users',
+            required: true,
+            unique: true
+        },
+        birth: {
+            type: Date,
+            required: true
+        },
+        phone: {
+            type: String,
+            required: true
+        },
+        addres: {
+            type: String,
             required: true
         },
         statusCard_id:{
@@ -23,10 +36,12 @@ var CardSchema = new Schema (
             required: true
         },
         dataArrival:{
-            type:Data
+            type:Date,
+            required: true
         },
         dataDeparture:{
-            type: Data
+            type: Date,
+            required: true
         },
         
     },

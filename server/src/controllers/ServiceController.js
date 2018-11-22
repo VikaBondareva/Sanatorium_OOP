@@ -1,46 +1,52 @@
-const serviceService = require('../services/service.service');
+const serviceService = require('../services/service.service')
 
-module.exports={
-    add,
-    delete,
+module.exports = {
+    addService,
     update,
-    getAll,
-    getById
-}
+    getAllServices,
+    getByOneService,
+    _delete,
+    sortServicesOnTypes
+};
 
 
-function add(req, res, next) {
-    serviceService.create(req.params.id)
+function addService(req, res, next) {
+
+    serviceService.create(req.body)
+        // .then(service=>service? res.json(service): res.status(400).json({message: 'Bad request'}))
         .then(() => res.json({}))
         .catch(err => next(err));
 }
 
-function getAll(req, res, next) {
-    serviceService.getAll()
-        .then(users => res.json(users))
+function getAllServices(req, res, next) {
+    serviceService.getAllServices()
+        .then(service=>service? res.json(service): res.sendStatus(404))
         .catch(err => next(err));
 }
 
-function getById(req, res, next){
-    serviceService.getById(req.params.id)
-        .then(user=>user? res.json(user): res.sendStatus(404))
+function getByOneService(req, res, next){
+    serviceService.getByOneService(req.params.id)
+        .then(service=>service? res.json(service): res.sendStatus(404))
         .catch(err=>next(err))
 }
 
-function delete(req, res, next) {
+function _delete(req, res, next) {
+    serviceService._delete(req.params.id)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function update(req, res, next) {
     serviceService.update(req.params.id)
-        .then(() => res.json({}))
+        .then(()=>res.json({message: "Service succesfully updated"}))
         .catch(err => next(err));
 }
 
-
-
-function delete(req, res, next) {
-    serviceService.delete(req.params.id)
-        .then(() => res.json({}))
-        .catch(err => next(err));
+function sortServicesOnTypes(req, res, next){
+    serviceService.sortServicesOnTypes()
+        .then(services => services ? res.json(services) : res.sendStatus(404))
+        .catch(err => next(err))
 }
-
 
 
 

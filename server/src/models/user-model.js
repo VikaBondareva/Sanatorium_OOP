@@ -29,19 +29,44 @@ var UserSchema = new Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'sanatoriumCards',
         },
-//        birth: {
-//            type: Date,
-//            required: true
-//        },
-        phone: {
-            type: String,
-        },
-        addres: {
-            type: String
-        },
+        roles: [{type: Number, ref: 'roles'}]
     },
     { versionKey: false }
 )
+
+////authenticate input against database
+//UserSchema.statics.authenticate = function (email, password, callback) {
+//  User.findOne({ email: email })
+//    .exec(function (err, user) {
+//      if (err) {
+//        return callback(err)
+//      } else if (!user) {
+//        var err = new Error('User not found.');
+//        err.status = 401;
+//        return callback(err);
+//      }
+//      bcrypt.compare(password, user.password, function (err, result) {
+//        if (result === true) {
+//          return callback(null, user);
+//        } else {
+//          return callback();
+//        }
+//      })
+//    });
+//}
+//
+////hashing a password before saving it to the database
+//UserSchema.pre('save', function (next) {
+//  var user = this;
+//  bcrypt.hash(user.password, 10, function (err, hash) {
+//    if (err) {
+//      return next(err);
+//    }
+//    user.password = hash;
+//    next();
+//  })
+//});
+
 
 var RoleScheme = new Schema({
     _id: {
@@ -53,26 +78,11 @@ var RoleScheme = new Schema({
     }
 })
 
-var UserRolesSchema = new Schema(
-    {
-        role_id: {
-            type: Number,
-            ref: "users"
-        },
-        user_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "roles"
-        }
-    }   
-)
-
 UserSchema.set('toJSON', { virtuals: true});
 
 var User = mongoose.model("users", UserSchema);
 var Roles= mongoose.model("roles", RoleScheme);
-var UserRole = mongoose.model("userRole", UserRolesSchema);
 module.exports={
     User,
-    Roles,
-    UserRole
+    Roles
 }

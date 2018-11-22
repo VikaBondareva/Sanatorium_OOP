@@ -6,13 +6,10 @@ mongoose.Promise = global.Promise;
  
 var ServiceSchema = new Schema(
     {
-        _id:{
-            type: Number,
-            required: true
-        },
         name: {
             type: String,
-            required: true
+            required: true,
+            unique: true
         },
         measure: {
             type: String,
@@ -47,8 +44,12 @@ var ServiceTypeSchema = new Schema(
     { versionKey: false }
 )
 
+ServiceSchema.set('toJSON', { virtuals: true});
+
 var TypesService= mongoose.model('servicesTypes', ServiceTypeSchema)
-var Services= mongoose.model('services', ServiceTypeSchema)
-module.exports=Services
-module.exports=TypesService
+var Services= mongoose.model('services', ServiceSchema)
+module.exports={
+    Services,
+    TypesService
+}
 
