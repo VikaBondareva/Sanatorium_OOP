@@ -21,11 +21,9 @@ async function authenticate({email, password}) {
         
         const { password, ...userWithoutHash} = user.toObject();
         
-        const token = jwt.sign({sub: user.id}, config.authentication.secret,
-                               {expiresIn: config.authentication.tokenLife});
+        const token = jwt.sign({sub: user.id}, config.authentication.secret);
         
-        const refreshToken = jwt.sign({sub: user.id}, config.authentication.refreshTokenSecret,
-                                      {exipesIn: config.authentication.refreshTokenLife})
+        const refreshToken = jwt.sign({sub: user.id}, config.authentication.refreshTokenSecret)
         
         return {
             ...userWithoutHash,

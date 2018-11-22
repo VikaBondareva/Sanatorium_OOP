@@ -6,8 +6,8 @@ const Roles=db.Roles;
 
 const checkToken = (req,res,next) =>{
     const token = req.headers['x-access-token'] || req.headers['authorization'];
-    if(token.startsWith('Baerer ')){
-        token = token.slice(7, token.length)
+    if(token.startsWith('Bearer')){
+        token = token.slice(' ')[1];
     }
     
     if(token){
@@ -31,7 +31,7 @@ const checkToken = (req,res,next) =>{
 };
 
 const isAdmin = (req,res,next)=>{
-    User.findOne({_id: req.id})
+    User.findOne({_id: req.decoded_id})
         .exec((err, user)=>{
             if(err){
                 if(err.kind === 'ObjectId'){
