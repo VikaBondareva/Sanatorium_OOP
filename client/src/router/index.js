@@ -14,13 +14,13 @@ import store from '../store/store' // your vuex store
 
 Vue.use(Router)
 
-const ifAuthenticated = (to, from, next) => {
-    if (store.getters.isAuthenticated) {
-        next()
-        return
-    }
-    next('/')
-}
+//const ifAuthenticated = (to, from, next) => {
+//    if (store.getters.isAuthenticated) {
+//        next()
+//        return
+//    }
+//    next('/')
+//}
 
 const routes = [
     {
@@ -32,7 +32,7 @@ const routes = [
         path: '/user/profile',
         name: 'userPage',
         component: ProfilePage,
-        beforeEnter: ifAuthenticated
+        meta:{requiredAuth:true}
     },
     {
         path: '/services',
@@ -48,13 +48,13 @@ const routes = [
         path: '/booking',
         name: 'booking',
         component: BookingPage,
-        beforeEnter: ifAuthenticated
+       meta:{requiredAuth:true}
     },
     {
         path: '/booking/cards',
         name: 'cards',
         component: Cards,
-        beforeEnter: ifAuthenticated
+        meta:{requiredAuth:true}
     }
   ]
 
@@ -65,17 +65,17 @@ const router = new Router({
     routes: routes
 })
 
-//router.beforeEach((to, from, next) => {
-//    if (to.meta.requiredAuth) {
-//        if (store.getters.isAuthenticated) {
-//            next()
-//        } else {
-//            router.push('/login')
-//        }
-//    } else {
-//        next()
-//    }
-//})
+router.beforeEach((to, from, next) => {
+    if (to.meta.requiredAuth) {
+        if (store.getters.isAuthenticated) {
+            next()
+        } else {
+            router.push('/login')
+        }
+    } else {
+        next()
+    }
+})
 
 export default router;
 

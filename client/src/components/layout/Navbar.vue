@@ -71,8 +71,8 @@
         data() {
             return {
                 showAuth: false,
-                isAdmin: false,
-                isAuth: false
+                isAdmin: '',
+                isAuth: ''
             }
         },
         watch:{
@@ -87,8 +87,8 @@
             }
         },
         methods: {
-            ...mapActions(['getCurretnUser', 'logout']),
-            isAdmin() {
+            ...mapActions(['getCurretnUser', 'logout', 'getCurretnUser']),
+            getUser() {
                 this.getCurrentUser();
             },
             auth() {
@@ -131,6 +131,9 @@
             serviseRequest(){
                 this.$router.push({name: 'serviceRequest'})
             }
+        },
+        created(){
+            this.getUser();
         },
         computed:{
             ...mapGetters(['isAuthenticated', 'user']),

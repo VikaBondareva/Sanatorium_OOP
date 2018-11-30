@@ -1,15 +1,15 @@
 import AuthService from '../../api/auth-service'
 import * as types from '../mutation'
 import { handleResponse} from '../../helpers/handler.js'
-//import Cookie from 'vue-cookies'
+import Cookie from 'vue-cookies'
 
 const state = {
     spinner: false,
     authAlerts: [],
     user:'',
-    authenticated: false
-//    refreshToken: Cookie.get('refreshToken'),
-//    accesstoken: Cookie.get('token')
+    authenticated: localStorage.getItem('user') || null,
+    refreshToken: Cookie.get('refreshToken'),
+    accesstoken: Cookie.get('token')
 }
     
 const getters = {
@@ -128,21 +128,21 @@ const mutations = {
     [types.SET_AUTHENTICATED](state, {value}){
         state.authenticated = value
     },
-//    [types.SET_USER](state, {value}){
-//        state.user = value;
-//    },
-//         [types.SET_TOKEN](state, {value}){
-//        state.refreshToken= value.refreshToken;
-//        state.accesstoken = value.accesstoken;
-//        Cookie.set('refreshToken', value.refreshToken, '20min');
-//        Cookie.set('accesstoken', value.accesstoken, '20min');
-//    },
-//    [types.REMOVE_TOKEN](state){
-//        state.refreshToken = null;
-//        state.accesstoken = null;
-//        Cookie.remove('refreshToken');
-//        Cookie.remove('accesstoken');
-//    }
+    [types.SET_USER](state, {value}){
+        state.user = value;
+    },
+    [types.SET_TOKEN](state, {value}){
+        state.refreshToken= value.refreshToken;
+        state.accesstoken = value.accesstoken;
+        Cookie.set('refreshToken', value.refreshToken, '20min');
+        Cookie.set('accesstoken', value.accesstoken, '20min');
+    },
+    [types.REMOVE_TOKEN](state){
+        state.refreshToken = null;
+        state.accesstoken = null;
+        Cookie.remove('refreshToken');
+        Cookie.remove('accesstoken');
+    }
 }
 
 export default {
