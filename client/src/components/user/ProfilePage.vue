@@ -1,17 +1,18 @@
 <template>
     <v-layout column fill-height>
+               <delete v-if='deleteShow' :order="order" :method="getUser"></delete>
 
         <v-layout column align-center>
-            <h3>{{user.surname}} {{user.name}} {{user.patronymic}}</h3>
+            <h3 class="text-center font-weight-bold text-uppercase py-4">{{user.surname}} {{user.name}} {{user.patronymic}}</h3>
         </v-layout>
         <div class="user-information">
             <div>
-                <span>Email: {{user.email}}</span>
+                <span class="font-weight-bold">Email: {{user.email}}</span>
             </div>
         </div>
 
         <div class="card">
-            <h4 class="card-header text-center font-weight-bold text-uppercase py-4">Забронированные услуги</h4>
+            <h4 class="text-center font-weight-bold text-uppercase py-3">Забронированные услуги</h4>
             <table class="table table-hover table-bordered">
                 <thead class="table__head">
                     <tr>
@@ -31,7 +32,7 @@
                         <td>{{item.service.measure}}</td>
                         <td>{{item.service.price}}</td>
                         <td>{{item.date}}</td>
-                        <td ><v-btn @click="deleteOrder(item._id)">Delete</v-btn></td>
+                        <td ><v-btn @click="remove(item)">Delete</v-btn></td>
                         <td ><v-btn @click="changeDate(item._id)">Изменить дату</v-btn></td>
                     </tr>
                 
@@ -40,15 +41,8 @@
                     
                 </tfoot>
             </table>
-            <!--
-            <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Забронированные услуги</h3>
-            <div class="card-body">
-                <mdb-table-editable :columns="columns" :rows="rows" class="text-center" striped bordered />
-            </div>
--->
         </div>
     </v-layout>
-    <!--    </v-container>-->
 </template>
 
 <script>
@@ -56,12 +50,18 @@
         mapGetters,
         mapActions
     } from 'vuex'
+    import Delete from '../dialogs/Delete.vue'
 //    import {
 //        mdbTableEditable
 //    } from 'mdbvue';
     export default {
+        components:{
+            Delete  
+        },
         data(){
             return {
+                order:'',
+                deleteShow:false,
                 changeDate: {
                     _id: '',
                     date: ''
@@ -69,12 +69,13 @@
             }
         },
         methods: {
-            ...mapActions(['getCurrentUser', 'deleteOrderUser', 'changeDateOfVisit']),
+            ...mapActions(['getCurrentUser', 'changeDateOfVisit']),
             getUser() {
                 this.getCurrentUser();
             },
-            deleteOrder(id){
-                this.deleteOrderUser({id: id});
+            remove(order){
+                this.order=order;
+                this.deleteShow = true;
             },
             changeDate(){
                 this.changeDateOfVisit({formData: this.changeDate});

@@ -26,7 +26,7 @@
                         <!--                        </v-text-field>-->
                         <v-menu ref="menu1" :close-on-content-click="false" v-model="menu1" :return-value.sync="card.dateArrival">
                             <v-text-field slot="activator" v-model="card.dateArrival" label="Дата заезда" prepend-icon="event" readonly></v-text-field>
-                            <v-date-picker id="service_datepiker" v-model="card.dateArrival" no-title>
+                            <v-date-picker id="service_datepiker" v-model="card.dateArrival" :min="new Date().toISOString().substr(0, 10)" no-title>
                                 <v-spacer></v-spacer>
                                 <v-btn flat color="primary" @click="menu1 = false">Cancel</v-btn>
                                 <v-btn flat color="primary" @click="$refs.menu1.save(card.dateArrival)">OK</v-btn>
@@ -35,7 +35,7 @@
 
                         <v-menu ref="menu2" :close-on-content-click="false" v-model="menu2" :return-value.sync="card.dateDeparture">
                             <v-text-field slot="activator" v-model="card.dateDeparture" label="Дата отьезда" prepend-icon="event" readonly></v-text-field>
-                            <v-date-picker id="service_datepiker" v-model="card.dateDeparture" no-title>
+                            <v-date-picker id="service_datepiker" v-model="card.dateDeparture" :min="card.dateArrival || new Date().toISOString().substr(0, 10)" no-title>
                                 <v-spacer></v-spacer>
                                 <v-btn flat color="primary" @click="menu2 = false">Cancel</v-btn>
                                 <v-btn flat color="primary" @click="$refs.menu2.save(card.dateDeparture)">OK</v-btn>

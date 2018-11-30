@@ -71,26 +71,22 @@
         data() {
             return {
                 showAuth: false,
-                isAdmin: '',
-                isAuth: ''
+                isAdmin: false,
+                isAuth: this.$store.getters.isAuthenticated
             }
         },
         watch:{
-            isAuth: function(){
+            isAuth: ()=>{ 
                 if(this.$store.getters.isAuthenticated)
                     return true;
-                return false;
-            },
-            isAdmin: function(){
-                if(this.$store.gettres.user.roles.find(1)) return true;
-                return false;
-            }
+                return false;},
+            isAdmin:()=>{ 
+                if(this.$store.gettres.user.roles.find(1)) 
+                    return true;
+                return false;}
         },
         methods: {
-            ...mapActions(['getCurretnUser', 'logout', 'getCurretnUser']),
-            getUser() {
-                this.getCurrentUser();
-            },
+            ...mapActions(['getCurretnUser', 'logout']),
             auth() {
                 this.showAuth = true;
             },
@@ -131,9 +127,6 @@
             serviseRequest(){
                 this.$router.push({name: 'serviceRequest'})
             }
-        },
-        created(){
-            this.getUser();
         },
         computed:{
             ...mapGetters(['isAuthenticated', 'user']),

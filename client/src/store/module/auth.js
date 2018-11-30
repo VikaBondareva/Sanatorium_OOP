@@ -7,7 +7,7 @@ const state = {
     spinner: false,
     authAlerts: [],
     user:'',
-    authenticated: localStorage.getItem('user') || null,
+    authenticated: localStorage.getItem('user') || false,
     refreshToken: Cookie.get('refreshToken'),
     accesstoken: Cookie.get('token')
 }
@@ -42,9 +42,8 @@ const actions = {
                     console.log("SUCCESSFULLY LOGIN_____");
                     console.log(response);
                     if (response.data.accessToken) {
-                       
 //                        commit(types.SET_TOKEN,response.data );
-                        commit(types.SET_AUTHENTICATED, {value:true});
+//                        commit(types.SET_AUTHENTICATED, {value:true});
                         localStorage.setItem('user', JSON.stringify(response.data));
                     }
                     commit(types.SET_SPINNER, { value: false })
@@ -66,7 +65,6 @@ const actions = {
                     commit(types.SET_USER, {value: response.data});
                     commit(types.SET_SPINNER, { value: false })
                     resolve(response);
-
                 })
                 .catch(error => {
                     console.log("CATHING ERROR");
@@ -75,13 +73,13 @@ const actions = {
                             AuthService.getCurrentUser()
                                 .then(response => {
                                     commit(types.SET_USER, {value: response.data});
+                                    commit(types.SET_SPINNER, { value: false })
                                     resolve(response);
                                 })
-                            commit(types.SET_SPINNER, { value: false })
                         })
                         .catch(data => {
-                            reject(data);
                             commit(types.SET_SPINNER, { value: false })
+                            reject(data);
                         });
                 })
         })
@@ -90,10 +88,10 @@ const actions = {
         commit(types.SET_SPINNER, { value: true })
             AuthService.logout()
                 .then(response => {
-                    console.log("CURRENT ");
                     console.log(response);
                     localStorage.removeItem('user')
 //                    commit(types.REMOVE_TOKEN);
+                    commit(types.SET_USER, {value: null})
                     commit(types.SET_SPINNER, { value: false })
                     return response;
 
@@ -104,14 +102,17 @@ const actions = {
                         .then(data => {
                             AuthService.logout()
                                 .then(response => {
-//                                    commit(types.REMOVE_TOKEN); localStorage.removeItem('user')
+//                                    commit(types.REMOVE_TOKEN); 
+                                commit(types.SET_USER, {value: null})
+                                localStorage.removeItem('user')
+                                 commit(types.SET_SPINNER, { value: false })
                                      return response;
                                 })
-                            commit(types.SET_SPINNER, { value: false })
+                           
                         })
                         .catch(data => {
+                         commit(types.SET_SPINNER, { value: false })
                             return data;
-                            commit(types.SET_SPINNER, { value: false })
                         });
                 })
     }
@@ -124,9 +125,6 @@ const mutations = {
     [types.ADD_AUTH_ALERT](state, message) {
         state.authAlerts.push(message)
         console.log(state.authAlerts)
-    },
-    [types.SET_AUTHENTICATED](state, {value}){
-        state.authenticated = value
     },
     [types.SET_USER](state, {value}){
         state.user = value;
