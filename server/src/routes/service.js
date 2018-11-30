@@ -9,7 +9,7 @@ module.exports = router;
 
 router.post('/api/services',[authJwt.checkToken,authJwt.isAdmin], ServiceController.addService);
 router.get('/api/services/sort', ServiceController.sortServicesOnTypes);
-
+router.post('/api/services/types', [authJwt.checkToken, authJwt.isAdmin], ServiceController.addType);
 router.put('/api/services/:id', [authJwt.checkToken,authJwt.isAdmin], ServiceController.update);
 router.delete('/api/services/:id', [authJwt.checkToken,authJwt.isAdmin], ServiceController._delete);
 router.get('/api/services', ServiceController.getAllServices);

@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const db = require('../_helpers/db');
 const User = db.User;
 
-
 module.exports = {
     authenticate,
     create,
@@ -13,25 +12,28 @@ module.exports = {
     _delete
 }
 
-
 async function authenticate({email, password}) {
     const user = await User.findOne({email});
-    
     if(user && bcrypt.compareSync(password, user.password)){
-        
-        const { password, ...userWithoutHash} = user.toObject();
-        
-        const token = jwt.sign({sub: user.id}, config.authentication.secret);
-        
-        const refreshToken = jwt.sign({sub: user.id}, config.authentication.refreshTokenSecret)
-        
+        const accessToken = jwt.sign({sub: user.id}, config.authentication.secret,  {
+         expiresIn: '0.5h'
+       });
+        const refreshToken = jwt.sign({sub: user.id}, config.authentication.refreshTokenSecret,{
+         expiresIn: 60*60
+       })
         return {
-            ...userWithoutHash,
-            token,
+            accessToken,
             refreshToken
         };
     }
 }
+// async function refreshToken({refreshToken}){
+//     if(refreshToken!=='unfidented'){
+        
+//     }
+//     const accessToken = jwt.sign({sub: user.id}, config.authentication.secret);
+//     const refreshToken = jwt.sign({sub: user.id}, config.authentication.refreshTokenSecret)
+// }
 
 async function getAll(){
     return await User.find();
@@ -46,13 +48,9 @@ async function create(userParam){
     if(await User.findOne({email: userParam.email})){
         throw `Username ${userParam.email} is already taken`;
     }
-    
     const user = new User(userParam);
-    user.roles.push(1);
-//    if(userParam.password){
-//        user.password = bcrypt.hashSync(userParam.password,10);
-//    }
-//    
+    user.roles.push(2);
+    
     await user.save()
 }
 

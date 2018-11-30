@@ -1,6 +1,3 @@
-const config = require('../config/config');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const db = require('../_helpers/db');
 const Service = db.Services;
 const TypesService=db.TypesService;
@@ -12,15 +9,31 @@ module.exports = {
     getByOneService,
     update,
     _delete,
-    sortServicesOnTypes
+    sortServicesOnTypes,
+    addType
 };
 
 async function getAllServices(){
-    return await Service.find()
+    const types = await TypesService.find();
+    const JTypes= [];
+    // const services = await Service.find();
+    // const JsonSevices = services.toObject();
+    
+    for(let i=0; i<types.length; i++){
+        JTypes.push(types[i].toObject());
+        JTypes[i]["services"]= await Service.find({serviceType_id: types[i]._id});
+    }
+    return JTypes;
 }
 
 async function getByOneService(id){
     return await Service.findById(id)
+}
+
+async function addType(param){
+    const type = TypesService(param);
+
+    await type.save();
 }
 
 async function create(serviceParam){
@@ -64,11 +77,13 @@ async function getSortServices(value, index, typeId){
 //////-------------
 async function sortServicesOnTypes(){
     const types = await TypesService.find();
-    // const sortService = [];
+     // const types = await TypesService.find();
+    // let mapServices=[];
     // for(let i=0; i<types.length; i++){
-    //     sortService.push(getListType(types[i]._id));
+        // mapServices.push(types[i]);
+        // mapServices[i].service=[];
+        // mapServices[i].push(services.find(x=>x.serviceType_id==mapServices[i]._id))
+        // mapServices.set(types[0], services.find(x=>x.serviceType_id===types[i]._id));
     // }
-
-    return types;
-    //return sortService;
+    // let sortServices= Array.from(mapServices.key);
 }

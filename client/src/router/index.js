@@ -1,12 +1,26 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import StartPage from '@/components/main/StarPage.vue'
-import Service from '@/components/main/Service.vue'
+import StartPage from '@/components/main/StartPage.vue'
 import Login from '@/components/auth/Login.vue'
 import Registraion from '@/components/auth/Registration.vue'
 import ProfilePage from '@/components/user/ProfilePage.vue'
+import AboutUs from '@/components/main/AboutUs'
+import ServicesPage from '@/components/main/ServicesPage'
+import BookingPage from '@/components/main/BookingPage.vue'
+import Cards from '@/components/main/Cards.vue'
+
+import store from '../store/store' // your vuex store 
+
 
 Vue.use(Router)
+
+const ifAuthenticated = (to, from, next) => {
+    if (store.getters.isAuthenticated) {
+        next()
+        return
+    }
+    next('/')
+}
 
 const routes = [
     {
@@ -15,14 +29,77 @@ const routes = [
         component: StartPage
     },
     {
-        path: '/login', name:'login',  component: Login  
+        path: '/user/profile',
+        name: 'userPage',
+        component: ProfilePage,
+        beforeEnter: ifAuthenticated
     },
     {
-        path: '/registration', name: 'registration', component: Registraion
+        path: '/services',
+        name: 'services',
+        component: ServicesPage
+    },
+    {
+        path: '/about',
+        name: 'about',
+        component: AboutUs
+    },
+    {
+        path: '/booking',
+        name: 'booking',
+        component: BookingPage,
+        beforeEnter: ifAuthenticated
+    },
+    {
+        path: '/booking/cards',
+        name: 'cards',
+        component: Cards,
+        beforeEnter: ifAuthenticated
     }
   ]
 
-export default new Router({
+
+
+const router = new Router({
     mode: 'history',
     routes: routes
 })
+
+//router.beforeEach((to, from, next) => {
+//    if (to.meta.requiredAuth) {
+//        if (store.getters.isAuthenticated) {
+//            next()
+//        } else {
+//            router.push('/login')
+//        }
+//    } else {
+//        next()
+//    }
+//})
+
+export default router;
+
+
+
+//export default new Router({
+//  mode: 'history',
+//  routes: [
+//    {
+//      path: '/',
+//      name: 'Home',
+//      component: Home,
+//    },
+//    {
+//      path: '/account',
+//      name: 'Account',
+//      component: Account,
+//      beforeEnter: ifAuthenticated,
+//    },
+//    {
+//      path: '/login',
+//      name: 'Login',
+//      component: Login,
+//      beforeEnter: ifNotAuthenticated,
+//    },
+//  ],
+//})

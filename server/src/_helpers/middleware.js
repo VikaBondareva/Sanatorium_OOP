@@ -19,12 +19,6 @@ const checkToken = (req,res,next) =>{
                 })
             } else {
                 req.userId=data.sub
-//                res.json({
-//                    data: data,
-//                    success: true,
-//                    message: "this is protected",
-//                })   
-                    
                 next();
             }
         });
@@ -56,7 +50,7 @@ const isAdmin = (req,res,next)=>{
                         res.status(500).send("Error -> " + err);
                     
                     for(let i=0; i<roles.length; i++){
-                        if(roles[i].name==="ADMIN"){
+                        if(roles[i]._id==1){
                             next();
 					       return;
                         }

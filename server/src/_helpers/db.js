@@ -1,5 +1,6 @@
 const {User, Roles, UserRole} = require('../models/user-model');
 const {Services, TypesService} = require('../models/service-model');
+const {Cards, Orders, Statuts}= require('../models/sanatorium-model.js');
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -9,5 +10,8 @@ module.exports = {
     Services,
     Roles,
     UserRole,
-    TypesService
-}
+    TypesService,
+    Cards,
+    Orders,
+    Statuts
+};

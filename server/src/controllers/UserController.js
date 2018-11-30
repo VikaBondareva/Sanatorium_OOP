@@ -1,69 +1,61 @@
 const userService = require('../services/user.service');
 
 module.exports={
-    update
+    update,
+    createCard,
+    getCurrent,
+    orderService,
+    deleteOrder,
+    getFullCurrentCardUser,
+    getCardsUser,
+    getOrdersUser
 }
 
-
+function getCurrent(req, res, next){
+    userService.getById(req.userId)
+        .then(user=> user? res.json(user): res.sendStatus(404))
+        .catch(err=> next(err))
+}
 function update(req,res,next){
-    userService.update(req.params.id,req.body)
+    userService.update(req.userId,req.body)
         .then(()=>res.json({message: "User saved"}))
         .catch(err=>next(err))
 }
 
+function createCard(req,res,next){
+	userService.createCard(req.userId,req.body)
+		.then(()=>res.json({message: "Card saved"}))
+        .catch(err=>next(err))
+}
 
-//const {User} = require('../models/user-model')
-//const jwt = require('jsonwebtoken')
-//const config = require('../config/config')
-//
+function orderService(req,res,next){
+	userService.orderService(req.body,req.userId,)
+		.then(()=>res.json({message: "Order register"}))
+        .catch(err=>next(err))
+}
 
-//
-//module.exports= {
-//    async register(req,res){
-//        try{
-//            const user = await User.insert(req.body)
-//            const userJson =User.toJSON()
-//            res.send({
-//                user: userJson,
-//                token: jwtSignUser(userJson)
-//            })
-//        } catch (error){
-//            res.status(400).send({
-//                error: 'This email account is alredy in use'
-//            })
-//        }
-//    },
-//    async login(req, res){
-//        try{
-//            const {email, password} = req.body
-//            const user = await User.findOne({
-//                email: email
-//            })
-//            if(!user){
-//                return res.status(403).send({
-//                    error: 'The login inform was incorrect'
-//                })
-//            }
-//            if(password===user.password){
-//                const userJson = user.toJSON()
-//                res.send({
-//                    user: userJson,
-//                    token: jwtSignUser(userJson)
-//                })
-//            }
-//            else {
-//                return res.status(403).send({
-//                    error: 'The login inform was incorrect'
-//                })
-//            }
-//            
-//        } catch(err){
-//            res.status(500).send({
-//                error: 'An error has occured trying to log in'
-//            })
-//        }
-//    }
-//}
+function deleteOrder(req,res,next){
+	userService.deleteOrder(req.params.id)
+		.then(()=>res.json({message: "Order delete"}))
+        .catch(err=>next(err))
+}
+
+function getFullCurrentCardUser(req,res,next){
+	userService.getFullCurrentCardUser(req.userId)
+		.then(cards=>cards? res.json(cards): res.status(400).json({message: 'Invalid'}))
+        .catch(err=>next(err))
+}
+function getCardsUser(req,res,next){
+	userService.getCardsUser(req.userId)
+		.then(card=>card? res.json(card): res.status(400).json({message: 'Invalid'}))
+        .catch(err=>next(err))
+}
+
+function getOrdersUser(req,res,next){
+	userService.getOrdersUser(req.userId)
+		.then(orders=>orders? res.json(orders): res.status(400).json({message: 'Invalid'}))
+        .catch(err=>next(err))
+}
 
 
 

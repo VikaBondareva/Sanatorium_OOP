@@ -1,38 +1,66 @@
 <template>
     <div class="main">
         <navbar></navbar>
-        <router-view></router-view>
-        <footer></footer>
+        <div class="main__container">
+           <div class="container__cover">
+               <router-view></router-view>
+           </div>
+        </div>
+        <div class="main__footer">
+            <footer-san></footer-san>
+        </div>
+        <vue-element-loading :active="spinner" :is-full-screen="true"/>
     </div>
 </template>
 
 <script>
-    //import { mapGetters } from "vuex";
-    //import VueElementLoading from "vue-element-loading";
-    import Navbar from "./components/layout/Navbar.vue";
-    import Footer from "./components/layout/Footer.vue";
-    import StartPage from './components/main/StarPage.vue'
+    import { mapGetters } from "vuex"
+    import Footer from "./components/layout/Footer.vue"
+    import VueElementLoading from "vue-element-loading"
+    import Navbar from "./components/layout/Navbar.vue"
+    import StartPage from './components/main/StartPage.vue'
 
     export default {
         components: {
-            //    "vue-element-loading": VueElementLoading,
+            "vue-element-loading": VueElementLoading,
             Navbar,
-            Footer,
+            "footer-san":Footer,
             "main-page": StartPage
         },
-        //  computed: {
-        //    ...mapGetters(["spinner"])
-        //  },
+        computed: {
+            ...mapGetters(["spinner"])
+        },
     };
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style >
     div.main {
-        height: 100vh;
+        width: 85%;
+        margin: 30px auto 10px;
     }
-
+    .main__footer{
+        height: 150px;
+        background: rgba(41, 43, 46, 0.7);
+        z-index: 1;
+        margin-top: 50px;
+    }
+    
+    .main__container{
+        background: #0000009c;
+        margin-top: 40px;
+        border: 2px solid;
+        padding: 30px;
+    }
+    .container__cover{
+        margin-top: 30px !important;
+        margin-bottom: 30px !important;
+        padding-top: 30px !important;
+        padding-bottom: 30px !important;
+        padding-left: 50px !important;
+        padding-right: 50px !important;
+        background-color: rgba(255, 255, 255, 0.81) !important;
+    }
     h1,
     h2 {
         font-weight: normal;

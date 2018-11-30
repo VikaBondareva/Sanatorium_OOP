@@ -1,17 +1,9 @@
-var mongoose= require('mongoose')
-var Schema = mongoose.Schema
+var mongoose= require('mongoose');
+var Schema = mongoose.Schema;
 require('mongoose-double')(mongoose);
 
 var CardSchema = new Schema (
     {
-        orders:{
-            type: Array,
-            required: true,
-        },
-        price: {
-            type: mongoose.Schema.Types.Double,
-            default: 0
-        },
         user_id:{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'users',
@@ -19,7 +11,7 @@ var CardSchema = new Schema (
             unique: true
         },
         birth: {
-            type: Date,
+            type: mongoose.Schema.Types.Date,
             required: true
         },
         phone: {
@@ -31,47 +23,67 @@ var CardSchema = new Schema (
             required: true
         },
         statusCard_id:{
-            type: Number,
-            ref: 'statusCard',
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'statuscard',
             required: true
         },
-        dataArrival:{
-            type:Date,
+        dateArrival:{
+            type:mongoose.Schema.Types.Date,
             required: true
         },
-        dataDeparture:{
-            type: Date,
+        dateDeparture:{
+            type: mongoose.Schema.Types.Date,
             required: true
         },
+        totalPrice:{
+            type: mongoose.Schema.Types.Double,
+            default: 0.0
+        }
         
     },
     { versionKey: false }
-)
+);
 
-varr OrderScheme= new Schema(
+var OrderSchema= new Schema(
     {
         service_id: {
-            type: Number,
-            ref: 'services'
-        },
-        user_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'users'
+            ref: 'services',
+            require: true
         },
-        data: {
-            type: Data,
-            required: true
+        card_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'sanatorium_cards',
+            require: true
+        },
+        date: {
+            type: mongoose.Schema.Types.Date,
+            required: true,
+            unique: true
         },
         statusOrder_id: {
-            type: Number,
-            ref: 'ststusOrder'
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ststuscard',
+            require: true
         }
     },
     { versionKey: false }
-)
+);
 
-var Orders = mongoose.model('orders', CardSchema)
-var Cards= mongoose.model('sanatoriumCards', ServiceTypeSchema)
-module.exports=Orders
-module.exports=Cards
+var StatusShema = new Schema({
+    name:{
+        type: String,
+        required:true 
+    }
+});
+
+OrderSchema.set('toJSON', { virtuals: true});
+CardSchema.set('toJSON', { virtuals: true});
+
+var Orders = mongoose.model('orders', OrderSchema);
+var Cards= mongoose.model('sanatorium_cards', CardSchema);
+var Statuts = mongoose.model('statuscard', StatusShema);
+module.exports={
+    Orders,Cards,Statuts
+};
 

@@ -45,6 +45,7 @@ var ServiceTypeSchema = new Schema(
 )
 
 ServiceSchema.set('toJSON', { virtuals: true});
+ServiceTypeSchema.set('toJSON', { virtuals: true});
 
 var TypesService= mongoose.model('servicesTypes', ServiceTypeSchema)
 var Services= mongoose.model('services', ServiceSchema)

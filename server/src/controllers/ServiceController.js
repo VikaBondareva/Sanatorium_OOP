@@ -6,7 +6,8 @@ module.exports = {
     getAllServices,
     getByOneService,
     _delete,
-    sortServicesOnTypes
+    sortServicesOnTypes,
+    addType
 };
 
 
@@ -18,9 +19,15 @@ function addService(req, res, next) {
         .catch(err => next(err));
 }
 
+function addType(req,res,next){
+    serviceService.addType(req.body)
+        .then(()=>res.json({message: "Type succesfully saved"}))
+        .catch(err => next(err));
+}
+
 function getAllServices(req, res, next) {
     serviceService.getAllServices()
-        .then(service=>service? res.json(service): res.sendStatus(404))
+        .then(services=>services? res.json(services): res.sendStatus(404))
         .catch(err => next(err));
 }
 

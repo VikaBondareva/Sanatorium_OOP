@@ -5,8 +5,9 @@
 
 html,
 body {
-    height: 100%;
     overflow: auto !important;
+    font-family: Arial, Tahoma, sans-serif;
+    
 }
 
 .full-height {
@@ -21,6 +22,24 @@ body {
 
 body {
     overflow: hidden;
+    position: relative;
+    z-index: 1;
+    max-height: 100000px;
+    
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url('../images/firest.jpg');
+    opacity: 0.8;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 .registration-container .v-card {

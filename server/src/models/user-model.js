@@ -28,7 +28,7 @@ var UserSchema = new Schema(
         },
         card_id:{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'sanatoriumCards',
+            ref: 'sanatorium_cards',
         },
         roles: [{type: Number, ref: 'roles'}]
     },

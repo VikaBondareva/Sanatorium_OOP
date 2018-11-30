@@ -1,59 +1,55 @@
 <template>
-  <v-layout column>
-    <v-flex xs6 offset-xs3>
-      <panel title="Login">
-        <v-text-field
-          label="Email"
-          v-model="email"
-        ></v-text-field>
-        <br>
-        <v-text-field
-          label="Password"
-          type="password"
-          v-model="password"
-        ></v-text-field>
-        <br>
-        <div class="danger-alert" v-html="error" />
-        <br>
-        <v-btn
-          dark
-          class="cyan"
-          @click="login">
-          Login
-        </v-btn>
-      </panel>
-    </v-flex>
-  </v-layout>
+ <v-container fluid fill-height>
+        <v-layout  justify-center>
+          <v-flex xs12>
+             <div v-if='showError'>{{error}}</div>
+              <v-card-text>
+                <v-form>
+                  <v-text-field prepend-icon="person" v-model='user.email' label="Email" type="text"></v-text-field>
+                  <v-text-field prepend-icon="lock" v-model='user.password' label="Пароль" type="password"></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn dark class="cyan" @click="sumbit">
+                    Войти
+                </v-btn>
+              </v-card-actions>
+          </v-flex>
+        </v-layout>
+      </v-container>
+
 </template>
 
 <script>
-import AuthenticationService from '@/services/AuthService'
-export default {
-  data () {
-    return {
-      email: '',
-      password: '',
-      error: null
+    import {
+        mapActions
+    } from 'vuex'
+    export default {
+        data() {
+            return {
+                user: {
+                    email: '',
+                    password: '',
+                },
+                error: null,
+                showError: false
+            }
+        },
+        methods: {
+            ...mapActions(['login']),
+            sumbit() {
+                this.login({
+                        user: this.user
+                    })
+                    .catch((err) => {
+                        this.error = err;
+                        this.showError = true;
+                    })
+            }
+        }
     }
-  },
-  methods: {
-    async login () {
-      try {
-        const response = await AuthenticationService.login({
-          email: this.email,
-          password: this.password
-        })
-//        this.$store.dispatch('setToken', response.data.token)
-//        this.$store.dispatch('setUser', response.data.user)
-//        this.$router.push({
-//          name: 'songs'
-//        })
-      } catch (error) {
-        this.error = error.response.data.error
-      }
-    }
-  }
-}
+
 </script>
 
 <style scoped>
