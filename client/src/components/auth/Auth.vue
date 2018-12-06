@@ -16,8 +16,8 @@
                         <v-tab-item v-for="item in items" :id="'tab-' + item.name" :key="item.name">
                             <v-card flat>
                                 <v-card>
-                                    <login v-if='item.name=="Login"'></login>
-                                    <registration v-if='item.name=="Registration"'></registration>
+                                    <login v-if='item.name=="Login"' @closeLogin="this.$parent.showAuth=$event"></login>
+                                    <registration v-if='item.name=="Registration"' @closeRegister="this.$parent.showAuth=$event"></registration>
                                 </v-card>
                             </v-card>
                         </v-tab-item>
@@ -38,6 +38,7 @@
         },
         data() {
             return {
+                authDialog:false,
                 currentItem: 'tab-Login',
                 items: [{
                         name: 'Login',

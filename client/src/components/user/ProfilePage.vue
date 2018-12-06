@@ -1,19 +1,19 @@
 <template>
-    <v-layout column fill-height>
+    <v-layout column fill-height style="min-heigth: 1000px;">
                <delete v-if='deleteShow' :order="order" :method="getUser"></delete>
 
         <v-layout column align-center>
             <h3 class="text-center font-weight-bold text-uppercase py-4">{{user.surname}} {{user.name}} {{user.patronymic}}</h3>
         </v-layout>
-        <div class="user-information">
+        <div class="card user-information">
             <div>
                 <span class="font-weight-bold">Email: {{user.email}}</span>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" style="padding: 10px!important;">
             <h4 class="text-center font-weight-bold text-uppercase py-3">Забронированные услуги</h4>
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered" >
                 <thead class="table__head">
                     <tr>
                         <th scope="col">№</th>
@@ -30,18 +30,23 @@
                         <td scope="row">{{index+1}}</td>
                         <td>{{item.service.name}}</td>
                         <td>{{item.service.measure}}</td>
-                        <td>{{item.service.price}}</td>
-                        <td>{{item.date}}</td>
+                        <td class="price">{{item.service.price}}</td>
+                        <td>{{item.date | dateFilter}}</td>
                         <td ><v-btn @click="remove(item)">Delete</v-btn></td>
-                        <td ><v-btn @click="changeDate(item._id)">Изменить дату</v-btn></td>
+                        <td ><v-btn @click="changeDate(item)">Изменить дату</v-btn></td>
                     </tr>
                 
                 </tbody>
                 <tfoot>
-                    
+                    <tr>
+                        <td colspan='3' class="bg-info text-white">Общая сумма за приемы:</td>
+                        <td class="text-uppercase bg-info text-white">{{totalPrice}}</td>
+                    </tr>
                 </tfoot>
             </table>
         </div>
+        <edit-date v-if="editDate" :order="order"></edit-date>
+
     </v-layout>
 </template>
 
@@ -51,21 +56,17 @@
         mapActions
     } from 'vuex'
     import Delete from '../dialogs/Delete.vue'
-//    import {
-//        mdbTableEditable
-//    } from 'mdbvue';
+    import EditDateOrder from './EditDateOrder.vue'
     export default {
         components:{
-            Delete  
+            Delete,
+            "edit-date": EditDateOrder
         },
         data(){
             return {
                 order:'',
+                editDate: false,
                 deleteShow:false,
-                changeDate: {
-                    _id: '',
-                    date: ''
-                }
             }
         },
         methods: {
@@ -77,20 +78,54 @@
                 this.order=order;
                 this.deleteShow = true;
             },
-            changeDate(){
-                this.changeDateOfVisit({formData: this.changeDate});
+            changeDate(item){
+                this.order= item;
+                this.editDate=true;
             }
         },
         created() {
             this.getUser();
         },
         computed: {
-            ...mapGetters(['user'])
+            ...mapGetters(['user']),
+            totalPrice(){
+                let price =0.0;
+                var prices = document.querySelectorAll('.price');
+                for(let i=0; i<prices.length; i++){
+                    price +=(+prices[i].textContent);
+                }
+                return price;
+            }
+        },
+        filters:{
+            dateFilter(item){
+                var date=  new Date(item);
+                var monthNames = [
+                "Января", "Февраля", "Марта",
+                "Апреля", "Мая", "Июня", "Июля",
+                "Августа", "Сентября", "Октября",
+                "Ноября", "Декабря"
+              ];
+
+              var day = date.getDate();
+              var monthIndex = date.getMonth();
+              var year = date.getFullYear();
+
+              return day + ' ' + monthNames[monthIndex] + ', ' + year;
+            }
         }
     }
 </script>
 
 <style scoped>
+    .user-information {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 20px;
+        height: 200px;
+/*        border: 1px solid;*/
+    }
+
     .information {
         margin: 20px;
 
@@ -104,5 +139,4 @@
     .information__field {
         font-size: 15px;
     }
-
 </style>

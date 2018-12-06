@@ -135,6 +135,9 @@
                 this.$router.push({
                     name: 'booking'
                 })
+            },
+            isAuthentication(){
+                return this.$store.getters.isAuthenticated;
             }
         }
     }

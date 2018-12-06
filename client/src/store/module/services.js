@@ -40,9 +40,19 @@ const actions = {
 
                 })
                 .catch(error => {
-                    console.log("ERROR");
-                    commit(types.SET_SPINNER, { value: false })
-                    reject(data);
+                    console.log("CATHING ERROR");
+                    handleResponse(error.response)
+                        .then(data => {
+                             OrserService.getCards()
+                                .then(response => {
+                                    commit(types.SET_SPINNER, { value: false })
+                                    resolve(response);
+                                })
+                        })
+                        .catch(data => {
+                            commit(types.SET_SPINNER, { value: false })
+                            reject(data);
+                        });
                 })
         })
     },
@@ -68,7 +78,7 @@ const actions = {
                         })
                         .catch(data => {
                             commit(types.SET_SPINNER, { value: false })
-                            reject(data);
+                            reject(data.data.message);
                         });
                 })
         })

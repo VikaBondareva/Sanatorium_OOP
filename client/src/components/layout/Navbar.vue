@@ -41,10 +41,10 @@
 -->
                         </b-dropdown>
                     </li>
-                    <li class="menu-btn-hover menu__li" v-if='!isAuth'>
+                    <li class="menu-btn-hover menu__li" v-if='!isAuthenticated'>
                         <button class="li__link" @click="auth" >АВТОРИЗАЦИЯ</button>
                     </li>
-                    <li class="menu-btn-hover menu__li" v-if='isAuth'>
+                    <li class="menu-btn-hover menu__li" v-else>
                         <b-dropdown text="Профиль" >
                             <b-dropdown-item @click="goToProfile">ПРОФИЛЬ</b-dropdown-item>
                             <b-dropdown-divider></b-dropdown-divider>
@@ -71,25 +71,24 @@
         data() {
             return {
                 showAuth: false,
-                isAdmin: false,
-                isAuth: this.$store.getters.isAuthenticated
+//                isAuth: this.$store.getters.isAuthenticated
             }
         },
         watch:{
             isAuth: ()=>{ 
                 if(this.$store.getters.isAuthenticated)
                     return true;
-                return false;},
-            isAdmin:()=>{ 
-                if(this.$store.gettres.user.roles.find(1)) 
-                    return true;
-                return false;}
+                return false;
+            } 
         },
         methods: {
-            ...mapActions(['getCurretnUser', 'logout']),
+            ...mapActions(['logout']),
             auth() {
                 this.showAuth = true;
             },
+//            isAuthenticated() {
+//                return this.$cookies.isKey('user')
+//            },
             logoutUser(){
                 this.logout();
             },
@@ -129,7 +128,14 @@
             }
         },
         computed:{
-            ...mapGetters(['isAuthenticated', 'user']),
+            ...mapGetters(['isAuthenticated', 'user']),  
+            isAdmin(){ 
+                if(this.$store.getters.user) {
+                     if(this.$store.getters.user.role===1) 
+                        return true;
+                }
+                return false;
+            }
         }
     }
 

@@ -11,7 +11,8 @@ export default {
     getCards(){
         return Axios.request({
             method: 'GET',
-            url: '/api/users/cards'
+            url: '/api/cards',
+            headers: authHeader()
         })
     },
     orderService(order){

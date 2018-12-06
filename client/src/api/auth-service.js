@@ -32,8 +32,8 @@ export default {
     },
     logout(){
         return Axios.request({
-            method: 'GET',
-            url: 'api/auth/logout',
+            method: 'POST',
+            url: '/api/auth/logout',
             headers: authHeader()
         })
     }

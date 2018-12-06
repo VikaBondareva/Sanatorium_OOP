@@ -30,31 +30,54 @@
                         </table>
                     </div>
 
-                    <v-flex xs3>
-                        <div style="margin-left: 30px;">
-                            <div class="form-group">
-                                <label for="inputType">Выберите тип услуги</label>
-                                <select v-model="typeSelect" ref="inputType" class="form-control">
-                                    <option v-for="type in types" v-bind:value="type._id">{{type.name}}</option>
-                                </select>
+                    <v-flex xs4>
+                        <div class="order">
+                            <div class="order__title">
+                                <h3>Запись на прием</h3>
                             </div>
-                            <div class="form-group" v-if="typeSelect">
-                                <label for="inputService">Выберите услугу</label>
-                                <select v-model="making.service_id" ref="inputService" class="form-control">
-                                    <option v-for="service in getServicesType" v-bind:value="service.id">{{service.name}} - {{service.price}} бел. руб</option>
-                                </select>
+                            <div class="order__form">
+                                <div>
+                                    <div class="form-group">
+                                        <label for="inputType">Выберите тип услуги</label>
+                                        <select v-model="typeSelect" ref="inputType" class="form-control">
+                                            <option v-for="type in types" v-bind:value="type._id">{{type.name}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" v-if="typeSelect">
+                                        <label for="inputService">Выберите услугу</label>
+                                        <select v-model="making.service_id" ref="inputService" class="form-control">
+                                            <option v-for="service in getServicesType" v-bind:value="service.id">{{service.name}} - {{service.price}} бел. руб</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <v-menu ref="menu" :close-on-content-click="false" v-model="menu" :return-value.sync="date">
+                                            <v-text-field slot="activator" v-model="date" label="Дата приема" prepend-icon="event" readonly></v-text-field>
+                                            <v-date-picker id="service_datepiker" v-model="date" no-title :min="new Date().toISOString().substr(0, 10)">
+                                                <v-spacer></v-spacer>
+                                                <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                                                <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                                            </v-date-picker>
+                                        </v-menu>
+                                    </div>
+<!--
+                                    <div class="form-group">
+                                        <v-menu ref="menu2" :close-on-content-click="false" v-model="menu2" :return-value.sync="time">
+                                            <v-text-field slot="activator" v-model="time" label="Время приема" prepend-icon="event" readonly></v-text-field>
+                                            <v-time-picker v-model="time" :allowed-hours="allowedHours" :allowed-minutes="allowedMinutes" class="mt-3" format="24hr" scrollable min="9:30" max="19:00">
+                                                <v-spacer></v-spacer>
+                                                <v-btn flat color="primary" @click="menu2 = false">Cancel</v-btn>
+                                                <v-btn flat color="primary" @click="$refs.menu2.save(time)">OK</v-btn>
+                                            </v-time-picker>
+                                        </v-menu>
+                                    </div>
+-->
+                                    <v-btn @click="order">Записаться на прием</v-btn>
+                                </div>
+                                <div v-if="error" style=" margin-top: 20px; margin-left: 20px;">
+                                    <span style="color:#f34;">{{error}}</span>
+                                    <router-link to="/booking">Зарегестрировать карточку</router-link>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <v-menu ref="menu" :close-on-content-click="false" v-model="menu" :return-value.sync="date">
-                                    <v-text-field slot="activator" v-model="date" label="Дата приема" prepend-icon="event" readonly></v-text-field>
-                                    <v-date-picker id="service_datepiker" v-model="date" no-title>
-                                        <v-spacer></v-spacer>
-                                        <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
-                                        <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-                                    </v-date-picker>
-                                </v-menu>
-                            </div>
-                            <v-btn @click="order">Записаться на прием</v-btn>
                         </div>
                     </v-flex>
                 </v-layout>
@@ -69,18 +92,19 @@
         mapActions,
         mapGetters
     } from 'vuex'
-//    import datePicker from '../dialogs/datePicker.vue'
     export default {
-//        components: {
-//            datePicker
-//        },
         data() {
             return {
                 fields: ['№', 'Наименование платной медицинской услуги', 'Еденица измерения', 'Цены, бел. руб'],
                 types: '',
                 typeSelect: '',
+                error: null,
+                errorDate: "На данную дату вы уже записались на прием. Выберите другую дату приема.",
+                errorCard: "У вас нет карточки. Пожалусйта зарегестрируйте сначало карточку посещения санатория!!",
                 date: new Date().toISOString().substr(0, 10),
                 menu: false,
+                menu2: false,
+                time: '11:15',
                 making: {
                     service_id: '',
                     date: ''
@@ -96,16 +120,28 @@
                     })
             },
             order() {
-                this.making.date=this.date;
-                this.orderService({formData:this.making});
-            }
+                this.error = null;
+                this.making.date = this.date;
+                this.orderService({
+                        formData: this.making
+                    })
+                    .catch((err) => {
+                        if (err === "error date")
+                            this.error = this.errorDate;
+                        else if (err === "error card")
+                            this.error = this.errorCard;
+                    })
+            },
+            allowedHours: v => v % 2,
+            allowedMinutes: v => v >= 10 && v <= 50,
+            allowedStep: m => m % 10 === 0
         },
         created() {
             this.getServicesAll();
         },
         computed: {
             getServicesType() {
-                const services = this.types.find(x=>x._id===this.typeSelect)["services"];
+                const services = this.types.find(x => x._id === this.typeSelect)["services"];
                 return services;
             }
         }
@@ -114,10 +150,21 @@
 </script>
 
 <style scoped>
+    .order {
+        width: 100%;
+        margin: 0 20px;
+    }
+
+    .order__form {
+        min-height: 300px;
+        background: #bbcfe3;
+        padding: 20px 20px 10px 10px;
+        border: 1px solid;
+    }
+
     .v-menu__content {
         top: 60px !important;
         left: 0 !important;
-
     }
 
     .services {

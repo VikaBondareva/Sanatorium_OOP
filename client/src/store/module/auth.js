@@ -1,15 +1,15 @@
 import AuthService from '../../api/auth-service'
 import * as types from '../mutation'
 import { handleResponse} from '../../helpers/handler.js'
-import Cookie from 'vue-cookies'
+//import Cookie from 'vue-cookies'
 
 const state = {
     spinner: false,
     authAlerts: [],
     user:'',
-    authenticated: localStorage.getItem('user') || false,
-    refreshToken: Cookie.get('refreshToken'),
-    accesstoken: Cookie.get('token')
+    authenticated: localStorage.getItem('user') || ''
+//    refreshToken: Cookie.get('refreshToken'),
+//    accesstoken: Cookie.get('token')
 }
     
 const getters = {
@@ -43,7 +43,6 @@ const actions = {
                     console.log(response);
                     if (response.data.accessToken) {
 //                        commit(types.SET_TOKEN,response.data );
-//                        commit(types.SET_AUTHENTICATED, {value:true});
                         localStorage.setItem('user', JSON.stringify(response.data));
                     }
                     commit(types.SET_SPINNER, { value: false })
@@ -128,19 +127,19 @@ const mutations = {
     },
     [types.SET_USER](state, {value}){
         state.user = value;
-    },
-    [types.SET_TOKEN](state, {value}){
-        state.refreshToken= value.refreshToken;
-        state.accesstoken = value.accesstoken;
-        Cookie.set('refreshToken', value.refreshToken, '20min');
-        Cookie.set('accesstoken', value.accesstoken, '20min');
-    },
-    [types.REMOVE_TOKEN](state){
-        state.refreshToken = null;
-        state.accesstoken = null;
-        Cookie.remove('refreshToken');
-        Cookie.remove('accesstoken');
     }
+//    [types.SET_TOKEN](state, {value}){
+//        state.refreshToken= value.refreshToken;
+//        state.accesstoken = value.accesstoken;
+//        Cookie.set('refreshToken', value.refreshToken, '1d');
+//        Cookie.set('accesstoken', value.accesstoken, '2min');
+//    },
+//    [types.REMOVE_TOKEN](state){
+//        state.refreshToken = null;
+//        state.accesstoken = null;
+//        Cookie.remove('refreshToken');
+//        Cookie.remove('accesstoken');
+//    }
 }
 
 export default {

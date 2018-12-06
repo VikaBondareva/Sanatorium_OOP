@@ -1,4 +1,5 @@
 import AuthService from '../api/auth-service'
+//import Cookie from 'vue-cookies'
 
 export function handleResponse(response) {
     return new Promise(function (resolve, reject) {
@@ -9,6 +10,7 @@ export function handleResponse(response) {
                 .then(response => {
                     console.log("SUCCESSFULLY REFRESH TOKEN");
                     if (response.data.accessToken) {
+//                        Cookie.set('user',JSON.stringify(response.data));
                         localStorage.setItem('user', JSON.stringify(response.data));
                     }
                     resolve("OK");
@@ -19,7 +21,7 @@ export function handleResponse(response) {
                     return reject("ERROR");
                 })
         } else {
-            reject("ERROR");
+            reject(response);
         }
     })
 }

@@ -4,7 +4,7 @@
 
 
             <v-flex xs10>
-                <v-form ref="form" v-model="valid" lazy-validation>
+                <div class="card" style="padding: 10px!important;">
                     <v-layout row>
                         <v-text-field v-model="user.name" label="Имя" readonly required>
                         </v-text-field>
@@ -13,46 +13,48 @@
                         <v-text-field v-model="user.patronymic" label="Отчество" readonly required>
                         </v-text-field>
                     </v-layout>
-                    <v-layout row>
-                        <v-text-field v-model="card.phone" mask="+### (##) ###-##-##" label="Телефон" :rules="rules.phone" type="text" clearable required>
+                    <v-form ref="form" v-model="valid" lazy-validation>
+                        <v-layout row>
+                            <v-text-field v-model="card.phone" mask="+### (##) ###-##-##" label="Телефон" :rules="rules.phone" type="text" clearable required>
+                            </v-text-field>
+                            <v-menu ref="menu" :close-on-content-click="false" v-model="menu" :nudge-right="40" lazy transition="scale-transition" offset-y full-width>
+                                <v-text-field required   :rules="rules.birth" slot="activator" v-model="card.birth" label="Дата рождения" prepend-icon="event" readonly></v-text-field >
+                                <v-date-picker ref="picker" v-model="card.birth" locale="ru-by" :max="new Date().toISOString().substr(0, 10)" min="1950-01-01" @change="save"></v-date-picker>
+                            </v-menu>
+                        </v-layout>
+                        <v-layout row>
+                            <!--                        <v-text-field v-model="card.dateArrival" @click="showDatePicker('arrival')" @arrival="setDateArrival" label="Дата заезда" slot="activator" prepend-icon="event" readonly :rules="rules.dateArrival" required>-->
+                            <!--                        </v-text-field>-->
+                            <v-menu ref="menu1" :close-on-content-click="false" v-model="menu1" :return-value.sync="card.dateArrival">
+                                <v-text-field slot="activator" required  :rules="rules.dateArrival" v-model="card.dateArrival" label="Дата заезда" prepend-icon="event" readonly></v-text-field>
+                                <v-date-picker id="service_datepiker" v-model="card.dateArrival" :min="new Date().toISOString().substr(0, 10)" no-title>
+                                    <v-spacer></v-spacer>
+                                    <v-btn flat color="primary" @click="menu1 = false">Cancel</v-btn>
+                                    <v-btn flat color="primary" @click="$refs.menu1.save(card.dateArrival)">OK</v-btn>
+                                </v-date-picker>
+                            </v-menu>
+
+                            <v-menu ref="menu2" :close-on-content-click="false" v-model="menu2" :return-value.sync="card.dateDeparture">
+                                <v-text-field slot="activator" :rules="rules.dateDeparture" required v-model="card.dateDeparture" label="Дата отьезда" prepend-icon="event" readonly></v-text-field>
+                                <v-date-picker id="service_datepiker" v-model="card.dateDeparture" :min="card.dateArrival || new Date().toISOString().substr(0, 10)" no-title>
+                                    <v-spacer></v-spacer>
+                                    <v-btn flat color="primary" @click="menu2 = false">Cancel</v-btn>
+                                    <v-btn flat color="primary" @click="$refs.menu2.save(card.dateDeparture)">OK</v-btn>
+                                </v-date-picker>
+                            </v-menu>
+                            <!--                        <v-text-field v-model="card.dateDeparture" @click="showDatePicker('departure')" @departure='setDateDeparture' label="Дата отьезда" slot="activator" prepend-icon="event" readonly :rules="rules.dateDeparture" required>-->
+                            <!--                        </v-text-field>-->
+                        </v-layout>
+                        <v-text-field v-model="card.addres" label="Адресс проживания" :counter="50" :rules="rules.addres" type="text" clearable required>
                         </v-text-field>
-                        <v-menu ref="menu" :close-on-content-click="false" v-model="menu" :nudge-right="40" lazy transition="scale-transition" offset-y full-width>
-                            <v-text-field slot="activator" v-model="card.birth" label="Дата рождения" prepend-icon="event" readonly></v-text-field>
-                            <v-date-picker ref="picker" v-model="card.birth" locale="ru-by" :max="new Date().toISOString().substr(0, 10)" min="1950-01-01" @change="save"></v-date-picker>
-                        </v-menu>
-                    </v-layout>
-                    <v-layout row>
-                        <!--                        <v-text-field v-model="card.dateArrival" @click="showDatePicker('arrival')" @arrival="setDateArrival" label="Дата заезда" slot="activator" prepend-icon="event" readonly :rules="rules.dateArrival" required>-->
-                        <!--                        </v-text-field>-->
-                        <v-menu ref="menu1" :close-on-content-click="false" v-model="menu1" :return-value.sync="card.dateArrival">
-                            <v-text-field slot="activator" v-model="card.dateArrival" label="Дата заезда" prepend-icon="event" readonly></v-text-field>
-                            <v-date-picker id="service_datepiker" v-model="card.dateArrival" :min="new Date().toISOString().substr(0, 10)" no-title>
-                                <v-spacer></v-spacer>
-                                <v-btn flat color="primary" @click="menu1 = false">Cancel</v-btn>
-                                <v-btn flat color="primary" @click="$refs.menu1.save(card.dateArrival)">OK</v-btn>
-                            </v-date-picker>
-                        </v-menu>
+                        <v-checkbox v-model="checkbox" checked="false" :rules="[v => !!v || 'You must agree to continue!']" label="Do you agree?" required></v-checkbox>
 
-                        <v-menu ref="menu2" :close-on-content-click="false" v-model="menu2" :return-value.sync="card.dateDeparture">
-                            <v-text-field slot="activator" v-model="card.dateDeparture" label="Дата отьезда" prepend-icon="event" readonly></v-text-field>
-                            <v-date-picker id="service_datepiker" v-model="card.dateDeparture" :min="card.dateArrival || new Date().toISOString().substr(0, 10)" no-title>
-                                <v-spacer></v-spacer>
-                                <v-btn flat color="primary" @click="menu2 = false">Cancel</v-btn>
-                                <v-btn flat color="primary" @click="$refs.menu2.save(card.dateDeparture)">OK</v-btn>
-                            </v-date-picker>
-                        </v-menu>
-                        <!--                        <v-text-field v-model="card.dateDeparture" @click="showDatePicker('departure')" @departure='setDateDeparture' label="Дата отьезда" slot="activator" prepend-icon="event" readonly :rules="rules.dateDeparture" required>-->
-                        <!--                        </v-text-field>-->
-                    </v-layout>
-                    <v-text-field v-model="card.addres" label="Адресс проживания" :counter="50" :rules="rules.addres" type="text" clearable required>
-                    </v-text-field>
-                    <v-checkbox v-model="checkbox" :rules="[v => !!v || 'You must agree to continue!']" label="Do you agree?" required></v-checkbox>
-
-                    <v-btn :disabled="!valid" @click="submit">
-                        submit
-                    </v-btn>
-                    <v-btn @click="clear">clear</v-btn>
-                </v-form>
+                        <v-btn :disabled="!valid" @click="submit">
+                            Зарегестрироваться
+                        </v-btn>
+                        <v-btn @click="clear">Очистить все поля</v-btn>
+                    </v-form>
+                </div>
             </v-flex>
 
             <date-picker v-if="modal" :item="dateItem"></date-picker>
@@ -64,13 +66,14 @@
 
 <script>
     import {
-        mapActions, mapGetters
+        mapActions,
+        mapGetters
     } from 'vuex'
-//    import datePicker from '../dialogs/datePicker.vue'
+    //    import datePicker from '../dialogs/datePicker.vue'
     export default {
-//        components: {
-//            datePicker
-//        },
+        //        components: {
+        //            datePicker
+        //        },
         data() {
             return {
                 card: {
@@ -96,11 +99,11 @@
                     name: [v => !!v || "Введите имя!"],
                     surname: [v => !!v || "Введите фамилию!"],
                     patronymic: [v => !!v || "Введите отчество!"],
-                    birth: [v => !!v || "Введите дату рождения!"],
+                    birth: [v => !!v || "Выберите дату рождения!"],
                     phone: [v => !!v || "Введите телефон!"],
                     addres: [v => !!v || "Введите аддресс проживания!"],
-                    dateArrival: [v => !!v || "Введите дату заезда!"],
-                    dateDeparture: [v => !!v || "Введите дату отьезда!"]
+                    dateArrival: [v => !!v || "Выберите дату заезда!"],
+                    dateDeparture: [v => !!v || "Выберите дату отьезда!"]
                 },
             }
         },
@@ -122,7 +125,7 @@
                 this.$refs.menu.save(date)
             },
             clear() {
-
+                this.$refs.form.reset();
             },
             setDateArrival(date) {
                 this.card.dateArrival = date;
@@ -131,12 +134,11 @@
                 this.card.dateDeparture = date;
             },
             submit() {
-                //                this.card.bith=this.card.bith.toISOString().substr(0, 10);
-                //                this.card.dateArrival=this.card.dateArrival.toISOString().substr(0, 10);
-                //                this.card.dateBirth = this.card.dateBirth.toISOString().substr(0, 10);
-                this.registrationCard({
-                    formData: this.card
-                })
+                if (this.$refs.form.validate()) {
+                    this.registrationCard({
+                        formData: this.card
+                    })
+                }
             }
         },
         created() {

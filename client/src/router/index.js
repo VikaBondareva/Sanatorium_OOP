@@ -14,14 +14,6 @@ import store from '../store/store' // your vuex store
 
 Vue.use(Router)
 
-//const ifAuthenticated = (to, from, next) => {
-//    if (store.getters.isAuthenticated) {
-//        next()
-//        return
-//    }
-//    next('/')
-//}
-
 const routes = [
     {
         path: '/',
@@ -29,7 +21,7 @@ const routes = [
         component: StartPage
     },
     {
-        path: '/user/profile',
+        path: '/profile',
         name: 'userPage',
         component: ProfilePage,
         meta:{requiredAuth:true}
@@ -70,7 +62,7 @@ router.beforeEach((to, from, next) => {
         if (store.getters.isAuthenticated) {
             next()
         } else {
-            router.push('/login')
+            router.push('/')
         }
     } else {
         next()
@@ -79,27 +71,3 @@ router.beforeEach((to, from, next) => {
 
 export default router;
 
-
-
-//export default new Router({
-//  mode: 'history',
-//  routes: [
-//    {
-//      path: '/',
-//      name: 'Home',
-//      component: Home,
-//    },
-//    {
-//      path: '/account',
-//      name: 'Account',
-//      component: Account,
-//      beforeEnter: ifAuthenticated,
-//    },
-//    {
-//      path: '/login',
-//      name: 'Login',
-//      component: Login,
-//      beforeEnter: ifNotAuthenticated,
-//    },
-//  ],
-//})

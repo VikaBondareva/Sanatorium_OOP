@@ -71,9 +71,11 @@
         methods: {
             ...mapActions(['registration']),
             sumbit() {
-                this.registration({
-                        formData: this.user
+                this.registration({formData: this.user})
+                    .then(()=>{
+                        this.$emit('closeRegister', false)
                     })
+                    
             }
         } 
     }

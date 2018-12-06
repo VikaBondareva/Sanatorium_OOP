@@ -39,8 +39,9 @@
         methods: {
             ...mapActions(['login']),
             sumbit() {
-                this.login({
-                        user: this.user
+                this.login({user: this.user})
+                    .then(()=>{
+                        this.$emit('closeLogin', false)
                     })
                     .catch((err) => {
                         this.error = err;

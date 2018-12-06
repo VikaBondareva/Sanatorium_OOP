@@ -51,8 +51,10 @@
         margin-top: 40px;
         border: 2px solid;
         padding: 30px;
+        min-height: 800px;
     }
     .container__cover{
+        min-height: 800px!important;
         margin-top: 30px !important;
         margin-bottom: 30px !important;
         padding-top: 30px !important;
