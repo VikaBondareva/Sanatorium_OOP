@@ -58,8 +58,7 @@ var OrderSchema= new Schema(
         },
         date: {
             type: mongoose.Schema.Types.Date,
-            required: true,
-            unique: true
+            required: true
         },
         statusOrder_id: {
             type: mongoose.Schema.Types.ObjectId,

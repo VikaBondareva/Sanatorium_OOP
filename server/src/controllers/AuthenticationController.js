@@ -6,13 +6,20 @@ module.exports={
     getById,
     _delete,
     getAll, 
-    logout
+    logout,
+    refreshTokens
 }
 
 function login(req, res, next){
     authService.authenticate(req.body)
-        .then(user=>user? res.json(user): res.status(400).json({message: 'Email  or password is incorrect'}))
+        .then(user=>user? res.json(user): res.status(400).json({success: false,message: 'Email  or password is incorrect'}))
         .catch(err=> next(err))
+}
+
+function refreshTokens(req,res,next){
+    authService.refreshTokens(req.refreshToken)
+        .then(tokens=>tokens? res.json(tokens):res.status(400).json({success: false, message: 'Invalid token'}))
+        .catch(err=> next(err));
 }
 
 function logout(req,res,next){

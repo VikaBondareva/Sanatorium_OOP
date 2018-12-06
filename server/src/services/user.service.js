@@ -19,7 +19,7 @@ module.exports = {
 
 async function getById(id){
     const user = await User.findById(id);
-    if (!user._id) throw 'User not found';
+    if (!user) throw 'User not found';
     let JsonUser = user.toObject();
 
     let card = await Cards.findOne({user_id: user._id});
@@ -74,18 +74,24 @@ async function createCard(id, cardParam){
 }
 
 async function orderService(orderParam,idUser){
+    
+    
     const status = await Statuts.findOne({name: "REGISTER"});
-    if(!status) throw "Srtatus invalid"
+    if(!status) throw "Status invalid"
      const card = await Cards.findOne({user_id: idUser});
-     if(!card) throw "Card invalid"
+     if(!card) return "error card"
      const order = new Orders({
         card_id: card._id,
         service_id: orderParam.service_id,
         date: orderParam.date,
         statusOrder_id: status._id
      })
-
-    await order.save();
+     try{
+        await order.save()
+        return; 
+     } catch(e){
+         return "error date";
+     }
 }
 
 async function deleteOrder(id){

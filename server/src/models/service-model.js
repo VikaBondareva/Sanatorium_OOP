@@ -22,33 +22,28 @@ var ServiceSchema = new Schema(
                       else return v}
         },
         serviceType_id:{
-            type: Number,
-            ref: 'servicesTypes',
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'servicestypes',
             required: true
         }
-    },
-    { versionKey: false }
+    }
 )
 
 var ServiceTypeSchema = new Schema(
     {
-        _id:{
-            type: Number,
-            required: true
-        },
         name: {
             type: String,
             required: true
         }
-    },
-    { versionKey: false }
+    }
 )
 
 ServiceSchema.set('toJSON', { virtuals: true});
 ServiceTypeSchema.set('toJSON', { virtuals: true});
 
-var TypesService= mongoose.model('servicesTypes', ServiceTypeSchema)
+var TypesService= mongoose.model('servicestypes', ServiceTypeSchema)
 var Services= mongoose.model('services', ServiceSchema)
+
 module.exports={
     Services,
     TypesService

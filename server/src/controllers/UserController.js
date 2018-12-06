@@ -30,7 +30,7 @@ function createCard(req,res,next){
 
 function orderService(req,res,next){
 	userService.orderService(req.body,req.userId,)
-		.then(()=>res.json({message: "Order register"}))
+		.then(response=>!response? res.json({message: "Order register"}): res.status(400).json({message: response}) )
         .catch(err=>next(err))
 }
 

@@ -30,9 +30,8 @@ var UserSchema = new Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'sanatorium_cards',
         },
-        roles: [{type: Number, ref: 'roles'}]
-    },
-    { versionKey: false }
+        role: {type: Number, ref: 'roles'}
+    }
 )
 
 ////authenticate input against database
