@@ -9,6 +9,7 @@
             <div>
                 <span class="font-weight-bold">Email: {{user.email}}</span>
             </div>
+            <card-user :card='user.card' v-if="user.card!=={}"></card-user>
         </div>
 
         <div class="card" style="padding: 10px!important;">
@@ -26,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody class="services__body">
-                    <tr v-for="(item,index) in user.orders">
+                    <tr v-for="(item,index) in user.card.orders">
                         <td scope="row">{{index+1}}</td>
                         <td>{{item.service.name}}</td>
                         <td>{{item.service.measure}}</td>
@@ -57,9 +58,11 @@
     } from 'vuex'
     import Delete from '../dialogs/Delete.vue'
     import EditDateOrder from './EditDateOrder.vue'
+    import cardUser from './CardUser.vue'
     export default {
         components:{
             Delete,
+            cardUser,
             "edit-date": EditDateOrder
         },
         data(){
@@ -67,12 +70,16 @@
                 order:'',
                 editDate: false,
                 deleteShow:false,
+                user: ''
             }
         },
         methods: {
             ...mapActions(['getCurrentUser', 'changeDateOfVisit']),
             getUser() {
-                this.getCurrentUser();
+                this.getCurrentUser()
+                    .then(response=>{
+                        this.user = response.data;
+                    })
             },
             remove(order){
                 this.order=order;
@@ -87,7 +94,7 @@
             this.getUser();
         },
         computed: {
-            ...mapGetters(['user']),
+            //...mapGetters(['user']),
             totalPrice(){
                 var price =0.0;
                 var prices = document.getElementsByClassName('price');

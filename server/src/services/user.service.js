@@ -154,6 +154,8 @@ async function getCardsUser(id) {
     return JsonCards;
 }
 
+
+
 async function getCurrentCardUser(id) {
     const card = await Cards.findOne({
         user_id: id

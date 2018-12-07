@@ -6,9 +6,8 @@ const cors= require('cors');
 const morgan = require('morgan');
 const config= require('./config/config');
 const mongoose=require('mongoose');
-const router = require('./routes/index.js');
+const {user,auth, service, admin}= require('./routes/index.js');
 const errorHandler = require('./_helpers/error-handler');
-
 mongoose.Promise=global.Promise;
 
 const app= express();
@@ -17,7 +16,10 @@ app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(router);
+app.use(user);
+app.use(auth);
+app.use(admin);
+app.use(service);
 
 app.use(errorHandler);
 
