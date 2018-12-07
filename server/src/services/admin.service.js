@@ -14,8 +14,7 @@ module.exports = {
     updateService,
     addTypeService,
     _deleteService,
-    getAllOrder,
-    getOrderWithReqisterStatus,
+    getOrderRegister,
     getStatuts,
     getOrdersActive
 }
@@ -55,21 +54,30 @@ async function removeOrder(id){
     await Orders.findByIdAndRemove(id);
 }
 
-async function getAllOrder(){
-    const status = await Statuts.find({name: 'REGISTER'});
-    const requests = await Orders.find({statusOrder_id: status._id });
+/////private
+async function getOrdersByStatus(byStatus){
+    
+    const status = await Statuts.findOne({name: byStatus});
+    if(!status._id) 
+        throw Error('invalid status');
+    
+    const ordersDb = await Orders.find({statusOrder_id: status._id}).sort({date: 1});
     let orders = [];
     
-    for(let i=0; i<requests.length; i++){
+    for(let i=0; i<ordersDb.length; i++){
         
-        orders.push(requests[i].toObject());
-        const card =await  Cards.findById(requests[i].card_id);
-//        if(!card) 
-//            throw new Error(`Not found card for ${requests[i]._id}`);
-        const service = await Service.findById(requests[i].service_id);
+        orders.push(ordersDb[i].toObject());
+        const card = await  Cards.findById(ordersDb[i].card_id);
+        
+        if(!card) 
+            throw new Error(`Not found card for ${ordersDb[i]._id}`);
+        
+        const service = await Service.findById(ordersDb[i].service_id);
         const user = await User.findById(card.user_id);
-//        if(!user) 
-//            throw new Error(`Not found user for ${requests[i]._id}`);
+        
+        if(!user) 
+            throw new Error(`Not found user for ${ordersDb[i]._id}`);
+        
         orders[i]['user'] = user.toObject();
         orders[i]['service'] = service;
         orders[i]['user']['phone'] = card.phone;
@@ -78,45 +86,26 @@ async function getAllOrder(){
         delete orders[i]['user']['role'];
         delete orders[i]['user']['password'];
     }    
-    const statuts =  await Statuts.find();
+    
+    return orders;
+}
+
+async function getOrderRegister(){
+    const statuts = await getStatuts();
+    const orders = await getOrdersByStatus("REGISTER");  
     return {orders, statuts};
 }
 
 async function getOrdersActive(){
-    const statut = await Statuts.find({name: 'ACTIVE'});
-    const requests = await Orders.find({statusOrder_id: statut._id });
-    let orders = [];
-    
-    for(let i=0; i<requests.length; i++){
-        
-        orders.push(requests[i].toObject());
-        const card =await  Cards.findById(requests[i].card_id);
-        const service = await Service.findById(requests[i].service_id);
-        const user = await User.findById(card.user_id);
-        orders[i]['user'] = user.toObject();
-        orders[i]['service'] = service;
-        orders[i]['user']['phone'] = card.phone;
-        delete orders[i]['user']['password'];
-        delete orders[i]['user']['email'];
-        delete orders[i]['user']['role'];
-        delete orders[i]['user']['password'];
-    }    
+    const orders = await getOrdersByStatus("ACTIVE");  
     return orders;
 }
 
 async function getStatuts(){
     const statuts = await Statuts.find();
+    if(!statuts) throw Error('invalid status');
     return statuts;
 }
-
-async function getOrderWithReqisterStatus(){
-    const status = await Statuts.find({name: 'REGISTER'});
-    if(!status) throw {massage: 'invalid status'};
-    const orders = await Orders.find({statusOrder_id: status._id});
-    
-    return orders;
-}
-
 
 
 async function addTypeService(param){
@@ -132,7 +121,6 @@ async function editTypeName(id, name){
     
     await typeService.save();
 }
-
 
 async function createService(serviceParam){
     const name = serviceParam.name;

@@ -10,8 +10,7 @@ module.exports={
     _deleteService,
     removeOrder,
     editTypeName,
-    getAllOrder,
-    getOrderWithReqisterStatus,
+    getOrderRegister,
     getStatuts,
     getOrdersActive
 }
@@ -23,8 +22,8 @@ function changeStatusOrder(req,res,next){
         .catch(err=>next(err))
 }
 
-function getAllOrder(req,res,next){
-     adminService.getAllOrder()
+function getOrderRegister(req,res,next){
+     adminService.getOrderRegister()
         .then(orders=>orders? res.json(orders): res.status(400).json({message: 'Invalid'}))
         .catch(err=>next(err))
 }

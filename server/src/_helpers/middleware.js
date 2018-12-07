@@ -54,7 +54,6 @@ const checkRefreshToken = (req,res,next)=>{
     }
 }
 
-
 const isAdmin = (req,res,next)=>{
     User.findOne({_id: req.userId})
         .exec((err, user)=>{

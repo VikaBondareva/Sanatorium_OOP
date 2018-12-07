@@ -62,10 +62,10 @@ export default {
             headers: authHeader()
         })
     },
-    getAllOrders(){
+    getOrdersRegister(){
         return Axios.request({
             method: 'GET',
-            url: '/api/orders',
+            url: '/api/orders/register',
             headers: authHeader()
         })
     },

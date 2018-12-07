@@ -6,10 +6,8 @@ module.exports = router;
 
 router.put('/api/orders/:id',[authJwt.checkToken, authJwt.isAdmin], AdminController.changeStatusOrder);
 router.delete('/api/orders/:id',[authJwt.checkToken, authJwt.isAdmin], AdminController.removeOrder);
-router.get('/api/orders',[authJwt.checkToken, authJwt.isAdmin], AdminController.getAllOrder);
+router.get('/api/orders/register',[authJwt.checkToken, authJwt.isAdmin], AdminController.getOrderRegister);
 router.get('/api/statuts',[authJwt.checkToken, authJwt.isAdmin], AdminController.getStatuts );
-
-router.get('/api/orders/register', [authJwt.checkToken, authJwt.isAdmin], AdminController.getOrderWithReqisterStatus);
 router.get('/api/orders/active',[authJwt.checkToken, authJwt.isAdmin], AdminController.getOrdersActive)
 
 router.put('/api/cards/:id', [authJwt.checkToken, authJwt.isAdmin], AdminController.changeStatusCard);

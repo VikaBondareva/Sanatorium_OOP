@@ -78,7 +78,7 @@ const actions = {
     getOrdersRequest({commit}){
         commit(types.SET_SPINNER, { value: true })
         return new Promise((resolve, reject) => {
-            OrserService.getAllOrders()
+            OrserService.getOrdersRegister()
                 .then(response => {
                     console.log(response);
                     commit(types.SET_SPINNER, { value: false })
@@ -89,7 +89,7 @@ const actions = {
                     console.log("CATHING ERROR");
                     handleResponse(error.response)
                         .then(data => {
-                             OrserService.getAllOrders()
+                             OrserService.getOrdersRegister()
                                 .then(response => {
                                     commit(types.SET_SPINNER, { value: false })
                                     resolve(response);
