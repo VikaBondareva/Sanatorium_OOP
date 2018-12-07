@@ -2,6 +2,14 @@ import Axios from 'axios'
 import { authRefreshHeader, authHeader } from '../helpers/headers.js'
 
 export default {
+    changeDateOrder(formData){
+        return Axios.request({
+            method: 'PUT',
+            url: '/api/user/orders/'+formData.id,
+            data: formData,
+            headers: authHeader()
+        })
+    },
     getServices() {
         return Axios.request({
             method: 'GET',
@@ -58,6 +66,21 @@ export default {
         return Axios.request({
             method: 'GET',
             url: '/api/orders',
+            headers: authHeader()
+        })
+    },
+    getOrdersActive(){
+         return Axios.request({
+            method: 'GET',
+            url: '/api/orders/active',
+            headers: authHeader()
+        })
+    },
+    changeStatusOrder(formData){
+        return Axios.request({
+            method: 'PUT',
+            url: '/api/orders/'+formData.id,
+            data: formData.statusId,
             headers: authHeader()
         })
     }

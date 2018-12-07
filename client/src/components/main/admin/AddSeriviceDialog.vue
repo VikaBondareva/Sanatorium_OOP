@@ -71,13 +71,18 @@
             add() {
                 this.error = null;
                 if(this.$refs.form.validate()){
-                    this.addService({formData: this.service})
+                   if(!isNaN(parseFloat(this.service.price)) && isFinite(this.service.price)){
+                        this.addService({formData: this.service})
                         .then(()=>{
                              this.method();
                         })
                         .catch((err)=>{
                             this.error =err.data.message;
                         });
+                    } else {
+                        this.error ="Введите конкретную цену";
+                    }
+                    
                 }
             },
             close() {

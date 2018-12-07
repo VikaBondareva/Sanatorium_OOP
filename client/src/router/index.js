@@ -2,15 +2,13 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import StartPage from '@/components/main/StartPage.vue'
-import Login from '@/components/auth/Login.vue'
-import Registraion from '@/components/auth/Registration.vue'
 import ProfilePage from '@/components/user/ProfilePage.vue'
 import AboutUs from '@/components/main/AboutUs'
 import ServicesPage from '@/components/main/ServicesPage'
 import BookingPage from '@/components/main/BookingPage.vue'
 import Cards from '@/components/admin/Cards.vue'
-//import OrdersPage from '@components/admin/OrdersPage.vue'
-
+import OrdersPage from '../components/admin/OrdersPage.vue'
+import ActiveOrders from '../components/admin/ActiveOrders.vue'
 import store from '../store/store' // your vuex store 
 
 
@@ -49,13 +47,19 @@ const routes = [
         name: 'cards',
         component: Cards,
         meta:{requiredAuth:true}
+    },
+    {
+        path: '/orders/register',
+        name: 'ordersRegister',
+        component: OrdersPage,
+        meta:{requiredAuth:true}
+    },
+    {
+        path: '/orders/active',
+        name: 'ordersActive',
+        component: ActiveOrders,
+        meta:{requiredAuth:true}
     }
-//    {
-//        path: '/booking/orders',
-//        name: 'orders',
-//        component: OrdersPage,
-//        meta:{requiredAuth:true}
-//    }
   ]
 
 const router = new Router({

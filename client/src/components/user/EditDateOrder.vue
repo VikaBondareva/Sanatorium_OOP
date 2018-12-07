@@ -13,20 +13,23 @@
 </template>
 
 <script>
+    import {mapActions} from 'vuex'
     export default {
-        props: ['order'],
+        props: ['order', 'method'],
         data() {
             return {
                 orderChange:{
-                    _id: this.order._id,
+                     id: this.order._id,
                      date: new Date(this.order.date).toISOString().substr(0, 10), 
                 }
             }
         },
         methods: {
+            ...mapActions(['changeDateOrder']),
             changeDate() {
-                this.$store.actions.changeDateOrder(this.orderChange);
+                this.changeDateOrder({formData:this.orderChange});
                 this.close();
+                this.method();
             },
             close() {
                 this.$parent.editDate = false

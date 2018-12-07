@@ -3,7 +3,7 @@
         <v-layout>
             <v-flex>
                 <v-layout>
-                    <span>Заявки на прием услуг</span>
+                    <span>Записи на приемы</span>
                 </v-layout>
                 <table id="dtBasicExample" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
@@ -16,8 +16,6 @@
                             </th>
                             <th class="th-sm">Время приема
                             </th>
-                            <th class="th-sm">Действия
-                            </th>
                         </tr>
                     </thead>
                     <tbody v-for="(item, index) in orders">
@@ -26,10 +24,6 @@
                             <td>{{item.user.phone}}</td>
                             <td>{{item.date.substr(0, 10)}}</td>
                             <td>{{item.date.substr(11, 15)}}</td>
-                            <td>
-                                <v-btn @click="reject(item._id)">Оклонить</v-btn>
-                                <v-btn @clikc="accept(item._id)">Принять</v-btn>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -44,38 +38,16 @@ import {mapActions} from 'vuex'
 export default {
         data() {
             return {
-                orders: '',
-                changeStatus: {
-                    statusId: '',
-                    id: ''
-                }
+                orders: ''
             }
         },
         methods: {
-            ...mapActions(['getOrdersRequest', 'changeStatusOrder']),
+            ...mapActions(['getOrdersActive']),
             getOrders() {
-                this.getOrdersRequest()
+                this.getOrdersActive()
                     .then((response) => {
-                        this.orders = response.data.orders;
-                        this.statuts = response.data.statuts;
+                        this.orders = response.data;
                     })
-            },
-            reject(id){
-                const status = this.statuts.find(x=>x.name === "CANCELED");
-                this.changeStatus.statusId = status._id;
-                this.changeStatus.id = id;
-                console.log(this.changeStatus)
-                this.changeStatusOrder({formData: this.changeStatus})
-                    
-                this.getOrders();
-            },
-            accept(id){
-                const status = this.statuts.find(x=>x.name === "ACTIVE");
-                this.changeStatus.statusId = status;
-                this.changeStatus.id = id;
-                this.changeStatusOrder({formData: changeStatus})
-                    
-                this.getOrders();
             }
         },
         created() {

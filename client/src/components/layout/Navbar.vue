@@ -32,6 +32,7 @@
                     <li class="menu-btn-hover menu__li" v-if='isAdmin'>
                         <b-dropdown text="УПРАВЛЕНИЕ" >
                             <b-dropdown-item @click="serviseRequest">ЗАЯВКИ НА УСЛУГИ</b-dropdown-item>
+                            <b-dropdown-item @click="serviseActive">АКТИВНЫЕ ЗАЯВКИ</b-dropdown-item>
                             <b-dropdown-item @click="bookingArrival">КАРТОЧКИ УЧАЩИХСЯ</b-dropdown-item>
 <!--
                             <b-dropdown-item>Third Action</b-dropdown-item>
@@ -124,8 +125,11 @@
                 this.$router.push({name: 'cards'})
             },
             serviseRequest(){
-                this.$router.push({name: 'orders'})
-            }
+                this.$router.push({name: 'ordersRegister'})
+            },
+            serviseActive(){
+                this.$router.push({name: 'ordersActive'})
+            },
         },
         computed:{
             ...mapGetters(['isAuthenticated', 'user']),  

@@ -32,7 +32,7 @@
                         <td>{{item.service.measure}}</td>
                         <td class="price">{{item.service.price}}</td>
                         <td>{{item.date | dateFilter}}</td>
-                        <td ><v-btn @click="remove(item)">Delete</v-btn></td>
+                        <td ><v-btn @click="remove(item)">Отменить</v-btn></td>
                         <td ><v-btn @click="changeDate(item)">Изменить дату</v-btn></td>
                     </tr>
                 
@@ -45,7 +45,7 @@
                 </tfoot>
             </table>
         </div>
-        <edit-date v-if="editDate" :order="order"></edit-date>
+        <edit-date v-if="editDate" :order="order" :method="getUser"></edit-date>
 
     </v-layout>
 </template>
@@ -89,12 +89,12 @@
         computed: {
             ...mapGetters(['user']),
             totalPrice(){
-                let price =0.0;
-                var prices = document.querySelectorAll('.price');
-                for(let i=0; i<prices.length; i++){
-                    price +=(+prices[i].textContent);
+                var price =0.0;
+                var prices = document.getElementsByClassName('price');
+                for(var i=0; i<prices.length; i++){
+                    price +=parseFloat(prices[i].textContent);
                 }
-                return price;
+                return price.toFixed(2);
             }
         },
         filters:{

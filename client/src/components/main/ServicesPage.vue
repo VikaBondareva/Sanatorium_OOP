@@ -24,7 +24,7 @@
                                     <td scope="row">{{index+1}}</td>
                                     <td>{{item.name}}</td>
                                     <td>{{item.measure}}</td>
-                                    <td>{{item.price}}</td>
+                                    <td>{{item.price | number}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -166,6 +166,11 @@
         },
         created() {
             this.getServicesAll();
+        },
+        filters:{
+            number(n){
+               return n.toFixed(2);
+            }
         },
         computed: {
             ...mapGetters(['user']),

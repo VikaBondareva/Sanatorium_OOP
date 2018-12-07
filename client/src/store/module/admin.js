@@ -48,6 +48,33 @@ const actions = {
                 })
         })
     },
+    getOrdersActive({commit}){
+        commit(types.SET_SPINNER, { value: true })
+        return new Promise((resolve, reject) => {
+            OrserService.getOrdersActive()
+                .then(response => {
+                    console.log(response);
+                    commit(types.SET_SPINNER, { value: false })
+                    resolve(response);
+
+                })
+                .catch(error => {
+                    console.log("CATHING ERROR");
+                    handleResponse(error.response)
+                        .then(data => {
+                             OrserService.getOrdersActive()
+                                .then(response => {
+                                    commit(types.SET_SPINNER, { value: false })
+                                    resolve(response);
+                                })
+                        })
+                        .catch(data => {
+                            commit(types.SET_SPINNER, { value: false })
+                            reject(data);
+                        });
+                })
+        })
+    },
     getOrdersRequest({commit}){
         commit(types.SET_SPINNER, { value: true })
         return new Promise((resolve, reject) => {
@@ -141,6 +168,34 @@ const actions = {
                                 })
                         })
                         .catch(data => {
+                            reject(data);
+                        });
+                })
+        })
+    },
+    changeStatusOrder({commit}, {formData}){
+        commit(types.SET_SPINNER, { value: true })
+        return new Promise((resolve, reject) => {
+            OrserService.changeStatusOrder(formData)
+                .then(response => {
+                    console.log("CURRENT ");
+                    console.log(response);
+                    commit(types.SET_SPINNER, { value: false })
+                    resolve(response);
+                })
+                .catch(error => {
+                    console.log("CATHING ERROR");
+                    handleResponse(error.response)
+                        .then(data => {
+                            OrserService.changeStatusOrder(formData)
+                                .then(response => {
+                                    console.log(response);
+                                    commit(types.SET_SPINNER, { value: false })
+                                    resolve(response);
+                                })
+                        })
+                        .catch(data => {
+                            commit(types.SET_SPINNER, { value: false })
                             reject(data);
                         });
                 })
