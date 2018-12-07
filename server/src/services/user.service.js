@@ -11,39 +11,55 @@ module.exports = {
     createCard,
     orderService,
     deleteOrder,
-    getFullCurrentCardUser,
     getCardsUser,
-    getOrdersUser
+    changeOrderDate
 }
 
+async function getFullCurrentCardUser(id) {
+    let card = await Cards.findOne({ user_id: id});
+    let JsonCard = card.toObject();
+    const orders = await Orders.find({card_id: card._id}).sort({date: 1});
+    const JsonOrsers = [];
+    for (let i = 0; i < orders.length; i++) {
+        JsonOrsers.push(orders[i].toObject())
+        const service = await Service.findOne({
+            _id: orders[i].service_id
+        });
+        JsonOrsers[i]["service"] = service;
+        delete JsonOrsers[i]["service_id"];
+        delete JsonOrsers[i]["card_id"];
+    }
+    JsonCard["orders"] = JsonOrsers;
+    return JsonCard;
+}
 
 async function getById(id) {
     const user = await User.findById(id);
     if (!user) throw 'User not found';
     let JsonUser = user.toObject();
 
-    let card = await Cards.findOne({
-        user_id: user._id
-    });
-    JsonUser["orders"] = [];
-    if (!card) {
-        return JsonUser;
-    };
-    const orders = await Orders.find({
-        card_id: card._id
-    });
-    const JsonOrsers = [];
-    for (let i = 0; i < orders.length; i++) {
-        JsonOrsers.push(orders[i].toObject())
-        const service = await Service.findById(orders[i].service_id);
-        JsonOrsers[i]["service"] = service;
-        delete JsonOrsers[i]["service_id"];
-    }
-
-    JsonUser["orders"] = JsonOrsers;
+    JsonUser.card = await getFullCurrentCardUser(user._id);
+//    let card = await Cards.findOne({
+//        user_id: user._id
+//    });
+//    JsonUser["orders"] = [];
+//    if (!card) {
+//        return JsonUser;
+//    };
+//    const orders = await Orders.find({
+//        card_id: card._id
+//    }).sort({date: 1});
+//    const JsonOrsers = [];
+//    for (let i = 0; i < orders.length; i++) {
+//        JsonOrsers.push(orders[i].toObject())
+//        const service = await Service.findById(orders[i].service_id);
+//        JsonOrsers[i]["service"] = service;
+//        delete JsonOrsers[i]["service_id"];
+//    }
+//
+//    JsonUser["orders"] = JsonOrsers;
     return JsonUser;
 }
-
 
 async function update(id, userParam) {
     const user = await User.findById(id);
@@ -82,6 +98,14 @@ async function createCard(id, cardParam) {
     
     await card.save();
 }
+
+async function changeOrderDate(id, data){
+    const order=await Orders.findById(id);
+    order.date = data.date;
+    
+    await order.save();
+}
+
 async function orderService(orderParam, idUser) {
 
     const status = await Statuts.findOne({
@@ -130,29 +154,6 @@ async function getCardsUser(id) {
     return JsonCards;
 }
 
-async function getFullCurrentCardUser(id) {
-    let card = await Cards.findOne({
-        user_id: id
-    });
-    let JsonCard = card.toObject();
-    const orders = await Orders.find({
-         card_id: card._id
-    });
-    const JsonOrsers = [];
-    for (let i = 0; i < orders.length; i++) {
-        JsonOrsers.push(orders[i].toObject())
-        const service = await Service.findOne({
-            _id: orders[i].service_id
-        });
-        JsonOrsers[i]["service"] = service;
-        delete JsonOrsers[i]["service_id"];
-        delete JsonOrsers[i]["card_id"];
-    }
-            // JsonCard["totalPrice"] = totalPriceOrders(JsonOrsers);
-    JsonCard["orders"] = JsonOrsers;
-    return JsonCard;
-}
-
 async function getCurrentCardUser(id) {
     const card = await Cards.findOne({
         user_id: id
@@ -160,30 +161,3 @@ async function getCurrentCardUser(id) {
     return card;
 }
 
-async function getOrdersUser(id) {
-    let card = await Cards.findOne({
-        user_id: id
-    });
-    const orders = await Orders.find({
-        card_id: card._id
-    });
-    const JsonOrsers = [];
-    for (let i = 0; i < orders.length; i++) {
-        JsonOrsers.push(orders[i].toObject())
-        const service = await Service.findOne({
-            _id: orders[i].service_id
-         });
-        JsonOrsers[i]["service"] = service;
-        delete JsonOrsers[i]["service_id"];
-    }
-    return JsonOrsers;
-}
-
-
-function totalPriceOrders(orders) {
-    let price = 0.0;
-    for (let i = 0; i < orders.length; i++) {
-        price += orders[i]["service"]["price"];
-    }
-    return price;
-}

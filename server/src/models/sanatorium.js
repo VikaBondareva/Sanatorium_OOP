@@ -62,7 +62,7 @@ var OrderSchema= new Schema(
         },
         statusOrder_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'ststuscard',
+            ref: 'statuscards',
             require: true
         }
     },
@@ -81,7 +81,7 @@ CardSchema.set('toJSON', { virtuals: true});
 
 var Orders = mongoose.model('orders', OrderSchema);
 var Cards= mongoose.model('sanatorium_cards', CardSchema);
-var Statuts = mongoose.model('statuscard', StatusShema);
+var Statuts = mongoose.model('statuscards', StatusShema);
 module.exports={
     Orders,Cards,Statuts
 };

@@ -2,8 +2,7 @@ const serviceService = require('../services/service.service')
 
 module.exports = {
     getAllServices,
-    getByOneService,
-    sortServicesOnTypes,
+    getByOneService
 };
 
 
@@ -19,9 +18,3 @@ function getByOneService(req, res, next){
         .catch(err=>next(err))
 }
 
-
-function sortServicesOnTypes(req, res, next){
-    serviceService.sortServicesOnTypes()
-        .then(services => services ? res.json(services) : res.sendStatus(404))
-        .catch(err => next(err))
-}

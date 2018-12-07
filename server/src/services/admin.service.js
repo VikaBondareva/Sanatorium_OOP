@@ -1,5 +1,6 @@
 const db = require('../_helpers/db');
 const Cards = db.Cards;
+const Statuts = db.Statuts;
 const User = db.User;
 const Service = db.Services;
 const TypesService=db.TypesService;
@@ -13,7 +14,10 @@ module.exports = {
     updateService,
     addTypeService,
     _deleteService,
-    getAllOrder
+    getAllOrder,
+    getOrderWithReqisterStatus,
+    getStatuts,
+    getOrdersActive
 }
 
 async function changeStatusCard(idUser,idStatus){
@@ -37,11 +41,13 @@ async function getAllCards(){
     return jsonCards;
 }
 
+
+
 async function changeStatusOrder(idOrder,idStatus){
-    const order = Orders.findOne({_id:idOrder});
+    const order =await Orders.findById(idOrder);
     if(!order._id) throw "Don't found order";
 
-    order.statusOrder_id=idStatus;
+    order.statusOrder_id=idStatus.statusId;
     await order.save();
 }
 
@@ -50,29 +56,67 @@ async function removeOrder(id){
 }
 
 async function getAllOrder(){
-    const orders = await Orders.find();
-    let jsonOrders = [];
+    const status = await Statuts.find({name: 'REGISTER'});
+    const requests = await Orders.find({statusOrder_id: status._id });
+    let orders = [];
     
-    for(let i=0; i<orders.length; i++){
+    for(let i=0; i<requests.length; i++){
         
-        jsonOrders.push(orders[i].toObject());
-        const card =await  Cards.findById(orders[i].card_id);
-        if(!card) 
-            throw new Error(`Not found card for ${orders[i]._id}`);
-        const service = await Service.findById(orders[i].service_id);
+        orders.push(requests[i].toObject());
+        const card =await  Cards.findById(requests[i].card_id);
+//        if(!card) 
+//            throw new Error(`Not found card for ${requests[i]._id}`);
+        const service = await Service.findById(requests[i].service_id);
         const user = await User.findById(card.user_id);
-        if(!user) 
-            throw new Error(`Not found user for ${orders[i]._id}`);
-        jsonOrders[i]['user'] = user.toObject();
-        jsonOrders[i]['service'] = service;
-        jsonOrders[i]['user']['phone'] = card.phone;
-        delete jsonOrders[i]['user']['password'];
-        delete jsonOrders[i]['user']['email'];
-        delete jsonOrders[i]['user']['role'];
-        delete jsonOrders[i]['user']['password'];
+//        if(!user) 
+//            throw new Error(`Not found user for ${requests[i]._id}`);
+        orders[i]['user'] = user.toObject();
+        orders[i]['service'] = service;
+        orders[i]['user']['phone'] = card.phone;
+        delete orders[i]['user']['password'];
+        delete orders[i]['user']['email'];
+        delete orders[i]['user']['role'];
+        delete orders[i]['user']['password'];
     }    
-    return jsonOrders;
+    const statuts =  await Statuts.find();
+    return {orders, statuts};
 }
+
+async function getOrdersActive(){
+    const statut = await Statuts.find({name: 'ACTIVE'});
+    const requests = await Orders.find({statusOrder_id: statut._id });
+    let orders = [];
+    
+    for(let i=0; i<requests.length; i++){
+        
+        orders.push(requests[i].toObject());
+        const card =await  Cards.findById(requests[i].card_id);
+        const service = await Service.findById(requests[i].service_id);
+        const user = await User.findById(card.user_id);
+        orders[i]['user'] = user.toObject();
+        orders[i]['service'] = service;
+        orders[i]['user']['phone'] = card.phone;
+        delete orders[i]['user']['password'];
+        delete orders[i]['user']['email'];
+        delete orders[i]['user']['role'];
+        delete orders[i]['user']['password'];
+    }    
+    return orders;
+}
+
+async function getStatuts(){
+    const statuts = await Statuts.find();
+    return statuts;
+}
+
+async function getOrderWithReqisterStatus(){
+    const status = await Statuts.find({name: 'REGISTER'});
+    if(!status) throw {massage: 'invalid status'};
+    const orders = await Orders.find({statusOrder_id: status._id});
+    
+    return orders;
+}
+
 
 
 async function addTypeService(param){

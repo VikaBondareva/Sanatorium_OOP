@@ -8,7 +8,14 @@ module.exports={
     deleteOrder,
     getFullCurrentCardUser,
     getCardsUser,
-    getOrdersUser
+    getOrdersUser,
+    changeOrderDate
+}
+
+function changeOrderDate(req, res, next){
+    userService.changeOrderDate(req.params.id, req.body)
+        .then(()=>res.json({message: "User saved"}))
+        .catch(err=> next(err))
 }
 
 function getCurrent(req, res, next){

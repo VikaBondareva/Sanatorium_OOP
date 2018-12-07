@@ -10,7 +10,10 @@ module.exports={
     _deleteService,
     removeOrder,
     editTypeName,
-    getAllOrder
+    getAllOrder,
+    getOrderWithReqisterStatus,
+    getStatuts,
+    getOrdersActive
 }
 
 
@@ -26,10 +29,28 @@ function getAllOrder(req,res,next){
         .catch(err=>next(err))
 }
 
+function getOrdersActive(req,res,next){
+     adminService.getOrdersActive()
+        .then(orders=>orders? res.json(orders): res.status(400).json({message: 'Invalid'}))
+        .catch(err=>next(err))
+}
+
 function removeOrder(req,res,next){
     adminService.removeOrder(req.params.id)
         .then(()=>res.json({message: "Order succesfully delete"}))
         .catch(err => next(err));    
+}
+
+function getOrderWithReqisterStatus(req,res,next){
+      adminService.getOrderWithReqisterStatus()
+        .then(orders=>orders? res.json(orders): res.status(400).json({message: 'Invalid'}))
+        .catch(err=>next(err))
+}
+
+function getStatuts(req,res,next){
+    adminService.getStatuts()
+        .then(orders=>orders? res.json(orders): res.status(400).json({message: 'Invalid'}))
+        .catch(err=>next(err))    
 }
 
 

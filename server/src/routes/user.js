@@ -12,4 +12,5 @@ router.post('/api/user/orders', authJwt.checkToken, UserController.orderService)
 router.delete('/api/user/orders/:id', authJwt.checkToken, UserController.deleteOrder);
 router.get('/api/user/cards', authJwt.checkToken, UserController.getCardsUser);
 router.get('/api/user/orders', authJwt.checkToken, UserController.getOrdersUser);
+router.put('/api/user/orders/:id', authJwt.checkToken, UserController.changeOrderDate);
 router.get('/api/user/cards/current', authJwt.checkToken, UserController.getFullCurrentCardUser);
