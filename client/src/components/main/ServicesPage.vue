@@ -30,7 +30,7 @@
                         </table>
                     </div>
 
-                    <v-flex xs4>
+                    <v-flex xs4 v-if='user.role == 2'>
                         <div class="order">
                             <div class="order__title">
                                 <h3>Запись на прием</h3>
@@ -75,14 +75,26 @@
                                 </div>
                                 <div v-if="error" style=" margin-top: 20px; margin-left: 20px;">
                                     <span style="color:#f34;">{{error}}</span>
-                                    <router-link to="/booking">Зарегестрировать карточку</router-link>
+                                    <router-link to="/booking" v-if="error==errorCard">Зарегестрировать карточку</router-link>
                                 </div>
                             </div>
+                        </div>
+                    </v-flex>
+                    
+                    <v-flex xs4 v-if='user.role == 1'>
+                        <div class="order">
+                            <div class="order__title">
+                                <h3>Добавления услуг</h3>
+                            </div>
+                                <v-btn @click="addType">Добавить тип услуг</v-btn>
+                                <v-btn @click='addService'>Довавить услугу</v-btn>
                         </div>
                     </v-flex>
                 </v-layout>
             </v-flex>
         </v-layout>
+        <add-type-dialog v-if="addTypeShow" :method='getServicesAll'></add-type-dialog>
+        <add-service-dialog v-if="addServiceShow" :method='getServicesAll' :types='getTypes()'></add-service-dialog>
     </v-container>
 
 </template>
@@ -92,14 +104,21 @@
         mapActions,
         mapGetters
     } from 'vuex'
+    import addTypeDialog from './admin/AddTypeDialog.vue'
+     import addServiceDialog from './admin/AddSeriviceDialog.vue'
     export default {
+        components:{
+            addTypeDialog, addServiceDialog
+        },
         data() {
             return {
+                addTypeShow:false,
+                addServiceShow: false,
                 fields: ['№', 'Наименование платной медицинской услуги', 'Еденица измерения', 'Цены, бел. руб'],
                 types: '',
                 typeSelect: '',
                 error: null,
-                errorDate: "На данную дату вы уже записались на прием. Выберите другую дату приема.",
+                errorDate: "На эту дату вы уже записались на прием. Выберите другую дату приема или другую процедуру.",
                 errorCard: "У вас нет карточки. Пожалусйта зарегестрируйте сначало карточку посещения санатория!!",
                 date: new Date().toISOString().substr(0, 10),
                 menu: false,
@@ -132,6 +151,15 @@
                             this.error = this.errorCard;
                     })
             },
+            addType(){
+                this.addTypeShow =true;   
+            },
+            addService(){
+                this.addServiceShow =true;   
+            },
+            getTypes(){
+                return this.types;
+            },
             allowedHours: v => v % 2,
             allowedMinutes: v => v >= 10 && v <= 50,
             allowedStep: m => m % 10 === 0
@@ -140,6 +168,7 @@
             this.getServicesAll();
         },
         computed: {
+            ...mapGetters(['user']),
             getServicesType() {
                 const services = this.types.find(x => x._id === this.typeSelect)["services"];
                 return services;

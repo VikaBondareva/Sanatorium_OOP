@@ -13,7 +13,7 @@ module.exports = {
             },
             refresh: {
                 type: 'refresh',
-                expiresIn: '3h'
+                expiresIn: '1d'
             }
         }
 

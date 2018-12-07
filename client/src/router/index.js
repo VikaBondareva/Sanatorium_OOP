@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import StartPage from '@/components/main/StartPage.vue'
 import Login from '@/components/auth/Login.vue'
 import Registraion from '@/components/auth/Registration.vue'
@@ -7,7 +8,8 @@ import ProfilePage from '@/components/user/ProfilePage.vue'
 import AboutUs from '@/components/main/AboutUs'
 import ServicesPage from '@/components/main/ServicesPage'
 import BookingPage from '@/components/main/BookingPage.vue'
-import Cards from '@/components/main/Cards.vue'
+import Cards from '@/components/admin/Cards.vue'
+//import OrdersPage from '@components/admin/OrdersPage.vue'
 
 import store from '../store/store' // your vuex store 
 
@@ -40,7 +42,7 @@ const routes = [
         path: '/booking',
         name: 'booking',
         component: BookingPage,
-       meta:{requiredAuth:true}
+        meta:{requiredAuth:true}
     },
     {
         path: '/booking/cards',
@@ -48,9 +50,13 @@ const routes = [
         component: Cards,
         meta:{requiredAuth:true}
     }
+//    {
+//        path: '/booking/orders',
+//        name: 'orders',
+//        component: OrdersPage,
+//        meta:{requiredAuth:true}
+//    }
   ]
-
-
 
 const router = new Router({
     mode: 'history',

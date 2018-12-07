@@ -124,7 +124,7 @@
                 this.$router.push({name: 'cards'})
             },
             serviseRequest(){
-                this.$router.push({name: 'serviceRequest'})
+                this.$router.push({name: 'orders'})
             }
         },
         computed:{

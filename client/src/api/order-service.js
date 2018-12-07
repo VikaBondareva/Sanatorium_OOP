@@ -37,5 +37,28 @@ export default {
             data: formData,
             headers: authHeader()
         })
+    },
+    addTypeService(name){
+        return Axios.request({
+            method: 'POST',
+            url: '/api/services/types',
+            data: name,
+            headers: authHeader()
+        })
+    },
+    addService(service){
+        return Axios.request({
+            method: 'POST',
+            url: '/api/services',
+            data: service,
+            headers: authHeader()
+        })
+    },
+    getAllOrders(){
+        return Axios.request({
+            method: 'GET',
+            url: '/api/orders',
+            headers: authHeader()
+        })
     }
 }   

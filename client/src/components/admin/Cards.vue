@@ -20,10 +20,10 @@
                     </thead>
                     <tbody v-for="(item, index) in items">
                         <tr>
-                            <td>{{item.name}} {{item.surname}} {{item.patronymic}}</td>
-                            <td>{{item.age}}</td>
-                            <td>{{item.dateArrivel}}</td>
-                            <td>{{item.dateDeparture}}</td>
+                            <td>{{item.user.name}} {{item.user.surname}} {{item.user.patronymic}}</td>
+                            <td>{{getAge(item.birth.substr(0, 10))}}</td>
+                            <td>{{item.dateArrival.substr(0, 10)}}</td>
+                            <td>{{item.dateDeparture.substr(0, 10)}}</td>
                         </tr>
 <!--
                         <tr>
@@ -61,7 +61,7 @@
         data() {
             return {
                 fields: ['№', 'Наименование платной медицинской услуги', 'Еденица измерения', 'Цены, бел. руб'],
-                items: '' //this.services
+                items: ''
             }
         },
         methods: {
@@ -71,83 +71,20 @@
                     .then((response) => {
                         this.items = response.data
                     })
+            },
+            getAge(date){
+                const now = new Date();
+                const birth = new Date(date);
+                return now.getFullYear() - birth.getFullYear();
             }
         },
         created() {
             this.getBooking();
+        },
+        computed: {
+           
         }
-//        computed: {
-//            ...mapGetters(['cardsBooking'])
-//        }
     }
 
 </script>
 
-<style scoped>
-   table.dataTable thead>tr>td.sorting,
-table.dataTable thead>tr>td.sorting_asc,
-table.dataTable thead>tr>td.sorting_desc,
-table.dataTable thead>tr>th.sorting,
-table.dataTable thead>tr>th.sorting_asc,
-table.dataTable thead>tr>th.sorting_desc {
-  padding-right: 30px
-}
-
-table.dataTable thead .sorting,
-table.dataTable thead .sorting_asc,
-table.dataTable thead .sorting_asc_disabled,
-table.dataTable thead .sorting_desc,
-table.dataTable thead .sorting_desc_disabled {
-  cursor: pointer;
-  position: relative
-}
-
-table.dataTable thead .sorting:after,
-table.dataTable thead .sorting:before,
-table.dataTable thead .sorting_asc:after,
-table.dataTable thead .sorting_asc:before,
-table.dataTable thead .sorting_asc_disabled:after,
-table.dataTable thead .sorting_asc_disabled:before,
-table.dataTable thead .sorting_desc:after,
-table.dataTable thead .sorting_desc:before,
-table.dataTable thead .sorting_desc_disabled:after,
-table.dataTable thead .sorting_desc_disabled:before {
-  position: absolute;
-  bottom: .9em;
-  display: block;
-  opacity: .3
-}
-
-table.dataTable thead .sorting:before,
-table.dataTable thead .sorting_asc:before,
-table.dataTable thead .sorting_asc_disabled:before,
-table.dataTable thead .sorting_desc:before,
-table.dataTable thead .sorting_desc_disabled:before {
-  right: 1em;
-  content: "\f0de";
-  font-family: FontAwesome;
-  font-size: 1rem
-}
-
-table.dataTable thead .sorting:after,
-table.dataTable thead .sorting_asc:after,
-table.dataTable thead .sorting_asc_disabled:after,
-table.dataTable thead .sorting_desc:after,
-table.dataTable thead .sorting_desc_disabled:after {
-  content: "\f0dd";
-  font-family: FontAwesome;
-  right: 16px;
-  font-size: 1rem
-}
-
-table.dataTable thead .sorting_asc:before,
-table.dataTable thead .sorting_desc:after {
-  opacity: 1
-}
-
-table.dataTable thead .sorting_asc_disabled:before,
-table.dataTable thead .sorting_desc_disabled:after {
-  opacity: 0
-}
-
-</style>

@@ -12,22 +12,15 @@ module.exports = {
     createService,
     updateService,
     addTypeService,
-    _deleteService
+    _deleteService,
+    getAllOrder
 }
 
-async function  changeStatusCard(idUser,idStatus){
+async function changeStatusCard(idUser,idStatus){
     const card = Cards.findOne({user_id:idUser});
     card.statusCard_id=idStatus;
 
     await card.save();
-}
-
-async function  changeStatusOrder(idOrder,idStatus){
-    const order = Orders.findOne({_id:idOrder});
-    if(!order._id) throw "Don't found order";
-
-    order.statusOrder_id=idStatus;
-    await order.save();
 }
 
 async function getAllCards(){
@@ -44,11 +37,58 @@ async function getAllCards(){
     return jsonCards;
 }
 
+async function changeStatusOrder(idOrder,idStatus){
+    const order = Orders.findOne({_id:idOrder});
+    if(!order._id) throw "Don't found order";
+
+    order.statusOrder_id=idStatus;
+    await order.save();
+}
+
+async function removeOrder(id){
+    await Orders.findByIdAndRemove(id);
+}
+
+async function getAllOrder(){
+    const orders = await Orders.find();
+    let jsonOrders = [];
+    
+    for(let i=0; i<orders.length; i++){
+        
+        jsonOrders.push(orders[i].toObject());
+        const card =await  Cards.findById(orders[i].card_id);
+        if(!card) 
+            throw new Error(`Not found card for ${orders[i]._id}`);
+        const service = await Service.findById(orders[i].service_id);
+        const user = await User.findById(card.user_id);
+        if(!user) 
+            throw new Error(`Not found user for ${orders[i]._id}`);
+        jsonOrders[i]['user'] = user.toObject();
+        jsonOrders[i]['service'] = service;
+        jsonOrders[i]['user']['phone'] = card.phone;
+        delete jsonOrders[i]['user']['password'];
+        delete jsonOrders[i]['user']['email'];
+        delete jsonOrders[i]['user']['role'];
+        delete jsonOrders[i]['user']['password'];
+    }    
+    return jsonOrders;
+}
+
+
 async function addTypeService(param){
     const type =new TypesService(param);
     
     await type.save();
 }
+
+async function editTypeName(id, name){
+    const typeService = await TypesService.findById(id);
+    
+    typeService.name = name;
+    
+    await typeService.save();
+}
+
 
 async function createService(serviceParam){
     const name = serviceParam.name;

@@ -1,7 +1,7 @@
 const db = require('../_helpers/db');
-const User= db.User;
+const User = db.User;
 const Cards = db.Cards;
-const Orders= db.Orders;
+const Orders = db.Orders;
 const Service = db.Services;
 const Statuts = db.Statuts;
 
@@ -17,22 +17,26 @@ module.exports = {
 }
 
 
-async function getById(id){
+async function getById(id) {
     const user = await User.findById(id);
     if (!user) throw 'User not found';
     let JsonUser = user.toObject();
 
-    let card = await Cards.findOne({user_id: user._id});
-    JsonUser["orders"]=[];
-    if(!card) {
+    let card = await Cards.findOne({
+        user_id: user._id
+    });
+    JsonUser["orders"] = [];
+    if (!card) {
         return JsonUser;
     };
-    const orders = await Orders.find({card_id: card._id});
+    const orders = await Orders.find({
+        card_id: card._id
+    });
     const JsonOrsers = [];
-    for(let i=0; i<orders.length; i++){
+    for (let i = 0; i < orders.length; i++) {
         JsonOrsers.push(orders[i].toObject())
-        const service=await Service.findById(orders[i].service_id);
-        JsonOrsers[i]["service"]=service;
+        const service = await Service.findById(orders[i].service_id);
+        JsonOrsers[i]["service"] = service;
         delete JsonOrsers[i]["service_id"];
     }
 
@@ -41,113 +45,145 @@ async function getById(id){
 }
 
 
-async function update(id, userParam){
+async function update(id, userParam) {
     const user = await User.findById(id);
 
     if (!user) throw 'User not found';
-    if (user.email !== userParam.email && await User.findOne({ email: userParam.email })) {
+    if (user.email !== userParam.email && await User.findOne({
+            email: userParam.email
+        })) {
         throw 'Email "' + userParam.email + '" is already taken';
     }
-    Object.assign(user,userParam);
-    
+    Object.assign(user, userParam);
+
     await user.save();
 }
 
-async function createCard(id, cardParam){
-    const status = await Statuts.findOne({name: "REGISTER"});
-    if(!status) throw "Srtatus invalid"
-     const car = await Cards.findOne({user_id: id})
-    	if(car){
-            throw `Карточка для данного пользователя уже существует`;
-        }
-        const card = new Cards({
-            user_id: id,
-            phone: cardParam.phone,
-            addres: cardParam.addres,
-            birth: cardParam.birth,
-            dateArrival: cardParam.dateArrival,
-            dateDeparture: cardParam.dateDeparture,
-            statusCard_id: status._id
-        });
-        
-        await card.save();
+async function createCard(id, cardParam) {
+    const status = await Statuts.findOne({
+        name: "REGISTER"
+    });
+    if (!status) throw "Srtatus invalid"
+    const car = await Cards.findOne({
+        user_id: id
+    })
+    if (car) {
+        throw `Карточка для данного пользователя уже существует`;
+    }
+    const card = new Cards({
+        user_id: id,
+        phone: cardParam.phone,
+        addres: cardParam.addres,
+        birth: cardParam.birth,
+        dateArrival: cardParam.dateArrival,
+        dateDeparture: cardParam.dateDeparture,
+        statusCard_id: status._id
+    });
+    
+    await card.save();
 }
+async function orderService(orderParam, idUser) {
 
-async function orderService(orderParam,idUser){
+    const status = await Statuts.findOne({
+        name: "REGISTER"
+    });
+    if (!status) throw "Status invalid"
+    const card = await Cards.findOne({
+        user_id: idUser
+    });
+    if (!card) throw "error card"
+    const service = await Service.findById(orderParam.service_id);
+    if (!service)
+        throw "not found service with this id"
     
+    const orders = await Orders.find({card_id: card.id, service_id: orderParam.service_id});
+    for(let i=0; i<orders.length; i++){
+        const date =orders[i].date.toISOString().substr(0, 10);
+        if(date === orderParam.date.substr(0, 10))
+             throw "error date";
+    }
     
-    const status = await Statuts.findOne({name: "REGISTER"});
-    if(!status) throw "Status invalid"
-     const card = await Cards.findOne({user_id: idUser});
-     if(!card) return "error card"
-     const order = new Orders({
+    const order = new Orders({
         card_id: card._id,
         service_id: orderParam.service_id,
         date: orderParam.date,
         statusOrder_id: status._id
-     })
-     try{
-        await order.save()
-        return; 
-     } catch(e){
-         return "error date";
-     }
+    })
+    await order.save()
 }
 
-async function deleteOrder(id){
-     await Orders.findByIdAndRemove(id);
+async function deleteOrder(id) {
+    await Orders.findByIdAndRemove(id);
 }
 
-async function getCardsUser(id){
-    let cards = await Cards.find({user_id: id});
+async function getCardsUser(id) {
+    let cards = await Cards.find({
+        user_id: id
+    });
     let JsonCards = cards.toObject();
-    for(let i=0; i<cards.length; i++){
-        const orders = await Orders.find({card_id: id});
-        JsonCards[i]["orders"]=orders
+    for (let i = 0; i < cards.length; i++) {
+        const orders = await Orders.find({
+            card_id: id
+        });
+        JsonCards[i]["orders"] = orders
     }
     return JsonCards;
 }
 
-async function getFullCurrentCardUser(id){
-    let card = await Cards.findOne({user_id: id});
+async function getFullCurrentCardUser(id) {
+    let card = await Cards.findOne({
+        user_id: id
+    });
     let JsonCard = card.toObject();
-    const orders = await Orders.find({card_id: card._id});
+    const orders = await Orders.find({
+         card_id: card._id
+    });
     const JsonOrsers = [];
-    for(let i=0; i<orders.length; i++){
+    for (let i = 0; i < orders.length; i++) {
         JsonOrsers.push(orders[i].toObject())
-        const service=await Service.findOne({_id:orders[i].service_id});
-        JsonOrsers[i]["service"]=service;
+        const service = await Service.findOne({
+            _id: orders[i].service_id
+        });
+        JsonOrsers[i]["service"] = service;
         delete JsonOrsers[i]["service_id"];
         delete JsonOrsers[i]["card_id"];
     }
-    // JsonCard["totalPrice"] = totalPriceOrders(JsonOrsers);
-    JsonCard["orders"]=JsonOrsers;
+            // JsonCard["totalPrice"] = totalPriceOrders(JsonOrsers);
+    JsonCard["orders"] = JsonOrsers;
     return JsonCard;
 }
 
-async function getCurrentCardUser(id){
-    const card = await Cards.findOne({user_id: id});
+async function getCurrentCardUser(id) {
+    const card = await Cards.findOne({
+        user_id: id
+    });
     return card;
 }
 
-async function getOrdersUser(id){
-    let card = await Cards.findOne({user_id: id});
-    const orders = await Orders.find({card_id: card._id});
+async function getOrdersUser(id) {
+    let card = await Cards.findOne({
+        user_id: id
+    });
+    const orders = await Orders.find({
+        card_id: card._id
+    });
     const JsonOrsers = [];
-    for(let i=0; i<orders.length; i++){
+    for (let i = 0; i < orders.length; i++) {
         JsonOrsers.push(orders[i].toObject())
-        const service=await Service.findOne({_id:orders[i].service_id});
-        JsonOrsers[i]["service"]=service;
+        const service = await Service.findOne({
+            _id: orders[i].service_id
+         });
+        JsonOrsers[i]["service"] = service;
         delete JsonOrsers[i]["service_id"];
     }
     return JsonOrsers;
 }
 
 
-function totalPriceOrders(orders){
-    let price =0.0;
-    for(let i=0; i<orders.length; i++){
-        price+=orders[i]["service"]["price"];
+function totalPriceOrders(orders) {
+    let price = 0.0;
+    for (let i = 0; i < orders.length; i++) {
+        price += orders[i]["service"]["price"];
     }
     return price;
 }
