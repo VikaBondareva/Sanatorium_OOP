@@ -77,7 +77,7 @@
         },
         watch:{
             isAuth: ()=>{ 
-                if(this.$store.getters.isAuthenticated)
+                if(this.$store.getters.isAuth)
                     return true;
                 return false;
             } 
@@ -132,14 +132,7 @@
             },
         },
         computed:{
-            ...mapGetters(['isAuthenticated', 'user']),  
-            isAdmin(){ 
-                if(this.$store.getters.user) {
-                     if(this.$store.getters.user.role===1) 
-                        return true;
-                }
-                return false;
-            }
+            ...mapGetters(['isAuthenticated', 'isAdmin', 'isAuth'])
         }
     }
 

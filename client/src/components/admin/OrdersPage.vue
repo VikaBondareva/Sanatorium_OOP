@@ -23,13 +23,14 @@
                     <tbody v-for="(item, index) in orders">
                         <tr>
                             <td>{{item.user.name}} {{item.user.surname}} {{item.user.patronymic}}</td>
-                            <td>{{item.user.phone}}</td>
-                            <td>{{item.date.substr(0, 10)}}</td>
-                            <td>{{item.date.substr(11, 15)}}</td>
+                            <td >{{item.user.phone}}</td>
+                            <td>{{item.date | dateFilter}}</td>
+                            <td>{{item.date.toString().substr(11, 15)}}</td>
                             <td>
-                                <v-btn @click="reject(item._id)">Оклонить</v-btn>
-                                <v-btn @clikc="accept(item._id)">Принять</v-btn>
+                               <v-btn flat @click="acceptBooking(item._id)">Принять</v-btn>
+                                <v-btn flat @click="rejectBooking(item._id)">Оклонить</v-btn>
                             </td>
+                            
                         </tr>
                     </tbody>
                 </table>
@@ -60,26 +61,41 @@ export default {
                         this.statuts = response.data.statuts;
                     })
             },
-            reject(id){
-                const status = this.statuts.find(x=>x.name === "CANCELED");
-                this.changeStatus.statusId = status._id;
-                this.changeStatus.id = id;
-                console.log(this.changeStatus)
-                this.changeStatusOrder({formData: this.changeStatus})
-                    
-                this.getOrders();
+            rejectBooking(id){
+                this.change("CANCELED", id);
             },
-            accept(id){
-                const status = this.statuts.find(x=>x.name === "ACTIVE");
-                this.changeStatus.statusId = status;
+            acceptBooking(id){
+                this.change("ACTIVE", id);
+            },
+            change(status, id){
+                const st = this.statuts.find(x=>x.name === status);
+                
+                this.changeStatus.statusId = st;
                 this.changeStatus.id = id;
-                this.changeStatusOrder({formData: changeStatus})
+                this.changeStatusOrder({formData: this.changeStatus})
                     
                 this.getOrders();
             }
         },
         created() {
             this.getOrders();
+        },
+        filters:{
+            dateFilter(item){
+                var date=  new Date(item);
+                var monthNames = [
+                "Января", "Февраля", "Марта",
+                "Апреля", "Мая", "Июня", "Июля",
+                "Августа", "Сентября", "Октября",
+                "Ноября", "Декабря"
+              ];
+
+              var day = date.getDate();
+              var monthIndex = date.getMonth();
+              var year = date.getFullYear();
+
+              return day + ' ' + monthNames[monthIndex] + ', ' + year;
+            }
         }
     }
 </script>

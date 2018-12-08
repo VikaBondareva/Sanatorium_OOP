@@ -26,6 +26,7 @@
         mapActions
     } from 'vuex'
     export default {
+        props:['method'],
         data() {
             return {
                 user: {
@@ -39,12 +40,13 @@
         methods: {
             ...mapActions(['login']),
             sumbit() {
+                this.error = null;
                 this.login({user: this.user})
                     .then(()=>{
-                        this.$emit('closeLogin', false)
+                        this.method();
                     })
                     .catch((err) => {
-                        this.error = err;
+                        this.error = "Неверной email или пароль";
                         this.showError = true;
                     })
             }

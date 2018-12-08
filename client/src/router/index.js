@@ -46,19 +46,19 @@ const routes = [
         path: '/booking/cards',
         name: 'cards',
         component: Cards,
-        meta:{requiredAuth:true}
+        meta:{requiredAuth:true,requiredAdmin:true}
     },
     {
         path: '/orders/register',
         name: 'ordersRegister',
         component: OrdersPage,
-        meta:{requiredAuth:true}
+        meta:{requiredAuth:true,requiredAdmin:true}
     },
     {
         path: '/orders/active',
         name: 'ordersActive',
         component: ActiveOrders,
-        meta:{requiredAuth:true}
+        meta:{requiredAuth:true,requiredAdmin:true}
     }
   ]
 
@@ -69,7 +69,15 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     if (to.meta.requiredAuth) {
+//        if(this.$cookies.isKey('accessToken')){
         if (store.getters.isAuthenticated) {
+            if(to.meta.requiredAdmin){
+                if(store.getters.isAdmin){
+                    next()
+                } else {
+                    router.push('/')
+                }
+            }
             next()
         } else {
             router.push('/')
@@ -77,6 +85,7 @@ router.beforeEach((to, from, next) => {
     } else {
         next()
     }
+    
 })
 
 export default router;

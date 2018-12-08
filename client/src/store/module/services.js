@@ -93,6 +93,8 @@ const actions = {
         })
     }
 }
+
+
   
 const mutations = {
     [types.SET_SERVICES](state, value) {

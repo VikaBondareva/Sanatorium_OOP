@@ -16,8 +16,8 @@
                         <v-tab-item v-for="item in items" :id="'tab-' + item.name" :key="item.name">
                             <v-card flat>
                                 <v-card>
-                                    <login v-if='item.name=="Login"' @closeLogin="this.$parent.showAuth=$event"></login>
-                                    <registration v-if='item.name=="Registration"' @closeRegister="this.$parent.showAuth=$event"></registration>
+                                    <login v-if='item.name=="Login"' :method="close"></login>
+                                    <registration v-if='item.name=="Registration"' :method="close"></registration>
                                 </v-card>
                             </v-card>
                         </v-tab-item>
