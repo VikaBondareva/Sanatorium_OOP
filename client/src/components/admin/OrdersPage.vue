@@ -25,10 +25,10 @@
                             <td>{{item.user.name}} {{item.user.surname}} {{item.user.patronymic}}</td>
                             <td >{{item.user.phone}}</td>
                             <td>{{item.date | dateFilter}}</td>
-                            <td>{{item.date.toString().substr(11, 15)}}</td>
+                            <td>{{item.date | timeFilter}}</td>
                             <td>
-                               <v-btn flat @click="acceptBooking(item._id)">Принять</v-btn>
-                                <v-btn flat @click="rejectBooking(item._id)">Оклонить</v-btn>
+                               <v-btn @click="acceptBooking(item._id)">Принять</v-btn>
+                                <v-btn  @click="rejectBooking(item._id)">Оклонить</v-btn>
                             </td>
                             
                         </tr>
@@ -95,6 +95,16 @@ export default {
               var year = date.getFullYear();
 
               return day + ' ' + monthNames[monthIndex] + ', ' + year;
+            },
+            timeFilter(item){
+                var date = new Date(item);
+
+                var hh = date.getUTCHours();
+                var mm = date.getUTCMinutes();
+
+                if (hh < 10) {hh = "0"+hh;}
+                if (mm < 10) {mm = "0"+mm;}
+                return  hh+":"+mm;
             }
         }
     }
