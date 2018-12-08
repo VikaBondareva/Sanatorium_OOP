@@ -31,7 +31,7 @@ var UserSchema = new Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'sanatorium_cards',
         },
-        role: {type: Number, ref: 'roles'}
+        role: {type: mongoose.Schema.Types.ObjectId, ref: 'roles'}
     }
 )
 
@@ -50,9 +50,6 @@ UserSchema.pre('save', function (next) {
 
 
 var RoleScheme = new Schema({
-    _id: {
-        type: Number  
-    },
     name:{
         type:String,
         required: true

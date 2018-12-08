@@ -28,6 +28,7 @@ async function changeStatusCard(idUser,idStatus){
 
 async function getAllCards(){
     const cards =await Cards.find();
+    if(!cards) throw "not cards";
     let jsonCards =[];
     for(let i=0; i<cards.length; i++){
         jsonCards.push(cards[i].toObject());
@@ -43,11 +44,15 @@ async function getAllCards(){
 
 
 async function changeStatusOrder(idOrder,idStatus){
-    const order =await Orders.findById(idOrder);
-    if(!order._id) throw "Don't found order";
-
-    order.statusOrder_id=idStatus.statusId;
-    await order.save();
+    const status = await Statuts.findById(idStatus);
+    if(!status) throw 'Not found this status'
+    
+    await  Orders.findOneAndUpdate({_id: idOrder}, {statusOrder_id: status._id}, function(err, user){
+        if(err) throw "invalid update";
+        else 
+            return;
+    });
+    
 }
 
 async function removeOrder(id){
