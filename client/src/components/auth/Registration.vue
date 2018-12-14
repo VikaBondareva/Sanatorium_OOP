@@ -1,7 +1,10 @@
 <template>
     <v-container fluid fill-height>
         <v-layout justify-center>
-            <v-flex>
+            <v-flex v-if="isSuccessRegister">
+                <success-register :email="user.email"></success-register>
+            </v-flex>
+            <v-flex v-if="!isSuccessRegister">
                     <form name="tab-tracker-form" v-model="valid" ref="form" autocomplete="off">
                         <v-text-field v-model="user.name" label="Имя" :counter="25" :rules="rules.name" clearable required>
                         </v-text-field>
@@ -25,16 +28,20 @@
                         </v-btn>
                     </v-card-actions>
             </v-flex>
+            
         </v-layout>
     </v-container>
-
 </template>
 
 <script>
     import {
         mapActions
     } from 'vuex'
+    import successRegister from './SuccessRegister.vue'
     export default {
+        components:{
+            successRegister  
+        },
         data() {
             return {
                 user: {
@@ -48,6 +55,7 @@
                 showPassword: false,
                 repeatPassword: "",
                 valid: false,
+                isSuccessRegister: false,
                 emailRegex: /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
                 rules: {
                     name: [v => !!v || "Введите имя!"],
@@ -71,9 +79,13 @@
         methods: {
             ...mapActions(['registration']),
             sumbit() {
+                this.isSuccessRegister = false;
                 this.registration({formData: this.user})
-                    .then(()=>{
-                        this.$emit('closeRegister', false)
+                    .then((response)=>{
+                        this.isSuccessRegister = true;
+                    })
+                    .catch((err)=>{
+                        this.isSuccessRegister = false;
                     })
                     
             }
