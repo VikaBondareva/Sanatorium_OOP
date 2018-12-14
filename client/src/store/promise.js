@@ -7,7 +7,6 @@ function promiseWithData({func}, {formData}, {commit}){
                 .then(response => {
                     console.log("CURRENT ");
                     console.log(response);
-//                    commit(types.SET_USER, {value: response.data});
                     commit(types.SET_SPINNER, { value: false })
                     resolve(response);
                 })
