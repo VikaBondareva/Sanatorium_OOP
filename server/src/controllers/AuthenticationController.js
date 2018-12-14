@@ -14,8 +14,8 @@ function login(req, res, next){
     authService.authenticate(req.body)
         .then((user)=>{
             if(user){
-                res.cookie('user',user, {maxAge: 3600, httpOnly: true});
-                res.json({});
+                res.cookie('user',user, {maxAge: 3600, httpOnly: true}).send(user);
+//                res.json(user);
             }
             else{
                 res.status(400).json({success: false, message: 'Email  or password is incorrect'});

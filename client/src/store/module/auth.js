@@ -1,6 +1,7 @@
 import AuthService from '../../api/auth-service'
 import * as types from '../mutation'
 import { handleResponse} from '../../helpers/handler.js'
+import cookie from '../../helpers/cookie.js'
 //import Cookie from 'vue-cookies'
 
 const state = {

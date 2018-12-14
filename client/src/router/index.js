@@ -69,6 +69,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     if (to.meta.requiredAuth) {
+//        if(Vue.cookie.get('accessToken'))
 //        if(this.$cookies.isKey('accessToken')){
         if (store.getters.isAuthenticated) {
             if(to.meta.requiredAdmin){

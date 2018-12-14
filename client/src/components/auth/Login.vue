@@ -2,8 +2,8 @@
  <v-container fluid fill-height>
         <v-layout  justify-center>
           <v-flex xs12>
-             <div v-if='showError'>{{error}}</div>
               <v-card-text>
+                <div v-if='showError' style="color:red;">{{error}}</div>
                 <v-form>
                   <v-text-field prepend-icon="person" v-model='user.email' label="Email" type="text"></v-text-field>
                   <v-text-field prepend-icon="lock" v-model='user.password' label="Пароль" type="password"></v-text-field>
@@ -43,6 +43,7 @@
                 this.error = null;
                 this.login({user: this.user})
                     .then(()=>{
+                        this.$router.go();
                         this.method();
                     })
                     .catch((err) => {

@@ -8,7 +8,7 @@ import BootstrapVue from 'bootstrap-vue'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import Vuetify from 'vuetify'
-//import VueCookies from 'vue-cookies'
+import VueCookies from 'vue-cookies'
 //import vueHeadful from 'vue-headful';
 
 //Vue.component('vue-headful', vueHeadful);
@@ -16,7 +16,7 @@ import Vuetify from 'vuetify'
 Vue.use(Vuetify)
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
-//Vue.use(VueCookies)
+Vue.use(VueCookies)
 Vue.config.productionTip = false
 
 import 'vuetify/dist/vuetify.min.css'

@@ -100,7 +100,10 @@
 //                return this.$cookies.isKey('user')
 //            },
             logoutUser(){
-                this.logout();
+                this.logout()
+                    .then(()=>{
+                        this.$router.go();    
+                    });
             },
             goToMainPage() {
                 this.$router.push({

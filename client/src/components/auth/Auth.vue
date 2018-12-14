@@ -54,7 +54,7 @@
         methods:{
             close(){
                 this.$parent.showAuth=false;
-            }    
+            }
         }
     }
 
