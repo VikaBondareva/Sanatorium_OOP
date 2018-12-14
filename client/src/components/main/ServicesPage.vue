@@ -29,8 +29,11 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <v-flex xs4 v-if='user.role == 2'>
+                    <v-layout>
+                        
+                    </v-layout>
+                    <v-flex xs4 v-if='isAuthenticated'>
+                       
                         <div class="order">
                             <div class="order__title">
                                 <h3>Запись на прием</h3>
@@ -79,10 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                    </v-flex>
-                    
-                    <v-flex xs4 v-if='user.role == 1'>
-                        <div class="order">
+                        <div class="order order_formAdd" v-if='isAdmin'>
                             <div class="order__title">
                                 <h3>Добавления услуг</h3>
                             </div>
@@ -90,6 +90,19 @@
                                 <v-btn @click='addService'>Довавить услугу</v-btn>
                         </div>
                     </v-flex>
+                    
+<!--                    <v-flex xs4 v-if='isAdmin'>-->
+<!--
+                        <div class="order" v-if='isAdmin'>
+                            <div class="order__title">
+                                <h3>Добавления услуг</h3>
+                            </div>
+                                <v-btn @click="addType">Добавить тип услуг</v-btn>
+                                <v-btn @click='addService'>Довавить услугу</v-btn>
+                        </div>
+-->
+<!--                    </v-flex>-->
+                    
                 </v-layout>
             </v-flex>
         </v-layout>
@@ -173,7 +186,7 @@
             }
         },
         computed: {
-            ...mapGetters(['user']),
+            ...mapGetters(['isAdmin','isAuthenticated']),
             getServicesType() {
                 const services = this.types.find(x => x._id === this.typeSelect)["services"];
                 return services;
@@ -184,6 +197,9 @@
 </script>
 
 <style scoped>
+    .order_formAdd{
+        margin-top: 40px!important;
+    }
     .order {
         width: 100%;
         margin: 0 20px;

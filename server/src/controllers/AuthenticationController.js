@@ -12,7 +12,15 @@ module.exports={
 
 function login(req, res, next){
     authService.authenticate(req.body)
-        .then(user=>user? res.json(user): res.status(400).json({success: false,message: 'Email  or password is incorrect'}))
+        .then((user)=>{
+            if(user){
+                res.cookie('user',user, {maxAge: 3600, httpOnly: true}).send(user);
+//                res.json(user);
+            }
+            else{
+                res.status(400).json({success: false, message: 'Email  or password is incorrect'});
+            }
+        })
         .catch(err=> next(err))
 }
 

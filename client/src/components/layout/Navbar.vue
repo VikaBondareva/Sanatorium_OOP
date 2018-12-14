@@ -12,6 +12,15 @@
             <div class=" header__block-center block__text-left">
                 Беларусь, Минская обл., Мядельский р-н, Мядельский сельсовет, д.Сосны, д.7
             </div>
+             <div>
+               Телефоны для справок: 
+            </div>
+            <div>
+               +375 (33) 687-65-66
+            </div>
+            <div>
+               +375 (44) 687-65-66
+            </div>
         </div>
         <div class="header__block .header__block__third">
             <div class="header__btn">
@@ -46,7 +55,7 @@
                         <button class="li__link" @click="auth" >АВТОРИЗАЦИЯ</button>
                     </li>
                     <li class="menu-btn-hover menu__li" v-else>
-                        <b-dropdown text="Профиль" >
+                        <b-dropdown text="ПРОФИЛЬ" >
                             <b-dropdown-item @click="goToProfile">ПРОФИЛЬ</b-dropdown-item>
                             <b-dropdown-divider></b-dropdown-divider>
                             <b-dropdown-item @click="logoutUser">ВЫХОД</b-dropdown-item>
@@ -77,7 +86,7 @@
         },
         watch:{
             isAuth: ()=>{ 
-                if(this.$store.getters.isAuthenticated)
+                if(this.$store.getters.isAuth)
                     return true;
                 return false;
             } 
@@ -91,7 +100,10 @@
 //                return this.$cookies.isKey('user')
 //            },
             logoutUser(){
-                this.logout();
+                this.logout()
+                    .then(()=>{
+                        this.$router.go();    
+                    });
             },
             goToMainPage() {
                 this.$router.push({
@@ -132,14 +144,7 @@
             },
         },
         computed:{
-            ...mapGetters(['isAuthenticated', 'user']),  
-            isAdmin(){ 
-                if(this.$store.getters.user) {
-                     if(this.$store.getters.user.role===1) 
-                        return true;
-                }
-                return false;
-            }
+            ...mapGetters(['isAuthenticated', 'isAdmin', 'isAuth'])
         }
     }
 
@@ -151,7 +156,7 @@
     }
 
     .header__block__second {
-        width: 200px;
+        width: 280px;
     }
 
     .header__block__third {
@@ -168,7 +173,7 @@
         position: relative;
         z-index: 1;
         float: left;
-        padding: 30px 0 30px 0;
+        padding: 10px 0 30px 0;
     }
 
     .header__block-center {
@@ -200,7 +205,6 @@
         border-style: solid !important;
         border-color: transparent !important;
     }
-
     .menu-btn-hover {
         font: 17px 'Roboto Condensed', sans-serif;
         font-weight: 700;

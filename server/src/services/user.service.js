@@ -17,6 +17,7 @@ module.exports = {
 
 async function getFullCurrentCardUser(id) {
     let card = await Cards.findOne({ user_id: id});
+    if(!card) return {};
     let JsonCard = card.toObject();
     const orders = await Orders.find({card_id: card._id}).sort({date: 1});
     const JsonOrsers = [];
@@ -153,8 +154,6 @@ async function getCardsUser(id) {
     }
     return JsonCards;
 }
-
-
 
 async function getCurrentCardUser(id) {
     const card = await Cards.findOne({

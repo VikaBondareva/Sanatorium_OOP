@@ -4,13 +4,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../_helpers/db');
 const authHelper = require('../_helpers/authHelper');
-
 const mongoose = require('mongoose');
 
-const User = mongoose.model('users');
-const Token = mongoose.model("tokens");
-//const User = db.User;
-//const Token = db.Token;
+const User = db.User;
+const Token = mongoose.model('tokens');
+const Roles = db.Roles;
+
 module.exports = {
     authenticate,
     create,
@@ -26,7 +25,7 @@ function updateToken(userId){
     const accessToken  = authHelper.generateAccessToken(userId);
     const refreshToken  = authHelper.generateRefreshToken(userId);
     
-   authHelper.replaceDbrefreshToken(refreshToken.id,userId)
+    authHelper.replaceDbrefreshToken(refreshToken.id,userId)
      return {
             accessToken,
             refreshToken: refreshToken.token,
@@ -35,8 +34,18 @@ function updateToken(userId){
 
 async function authenticate({email, password}) {
     const user = await User.findOne({email});
-    if(user && bcrypt.compareSync(password, user.password)){       
-       return  updateToken(user._id);
+    if(user && bcrypt.compareSync(password, user.password)){ 
+        let admin = false;
+        const userRole = await Roles.findById(user.role)
+        if(userRole.name =="ADMIN"){
+            admin = true;
+        }
+        const {accessToken,refreshToken} = updateToken(user._id);
+        return {
+            accessToken,
+            refreshToken,
+            admin
+        };
     }
     else {
         throw new Error('User not found');
@@ -44,11 +53,20 @@ async function authenticate({email, password}) {
 }
 
 async function refreshTokens(id){
-    
+   let admin = false;
    const token =   await Token.findOne({tokenId: id})
    if(!token) throw new Error('Invalid token, not found '+id)
-   const tok = updateToken(token.userId);
-    return tok;
+    const user = await User.findById(token.userId)
+    const userRole = await Roles.findById(user.role)
+    if(userRole.name == "ADMIN"){
+            admin = true;
+    }
+    const {accessToken,refreshToken}= updateToken(token.userId);
+    return {
+            accessToken,
+            refreshToken,
+            admin
+        };
 }
 
 async function logout(id){
@@ -64,11 +82,12 @@ async function getById(id){
 }
 
 async function create(userParam){
+    const role = await Roles.findOne({name: "USER"});
     if(await User.findOne({email: userParam.email})){
         throw `Username ${userParam.email} is already taken`;
     }
     const user = new User(userParam);
-    user.role=2;
+    user.role=role._id;
     
     await user.save()
 }

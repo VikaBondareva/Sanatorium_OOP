@@ -70,7 +70,7 @@ const isAdmin = (req,res,next)=>{
                 Roles.findById(user.role, (err, role)=>{
                     if(err)
                         res.status(500).send("Error -> " + err);
-                    if(role._id==1){
+                    if(role.name==="ADMIN"){
                         next();
 					    return;
                     }

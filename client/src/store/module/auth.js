@@ -1,13 +1,16 @@
 import AuthService from '../../api/auth-service'
 import * as types from '../mutation'
 import { handleResponse} from '../../helpers/handler.js'
+import cookie from '../../helpers/cookie.js'
 //import Cookie from 'vue-cookies'
 
 const state = {
     spinner: false,
     authAlerts: [],
     user:'',
-    authenticated: localStorage.getItem('user') || ''
+    authenticated: localStorage.getItem('user'),
+    admin: localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')).admin : false,
+    auth: false
 //    refreshToken: Cookie.get('refreshToken'),
 //    accesstoken: Cookie.get('token')
 }
@@ -17,6 +20,8 @@ const getters = {
     authAlerts: state => state.authAlerts,
     user: state=> state.user,
     isAuthenticated: state => !!state.authenticated,
+    isAdmin: state=> !!state.admin,
+    isAuth: state=> state.auth
 }
 
 const actions = {
@@ -42,7 +47,6 @@ const actions = {
                     console.log("SUCCESSFULLY LOGIN_____");
                     console.log(response);
                     if (response.data.accessToken) {
-//                        commit(types.SET_TOKEN,response.data );
                         localStorage.setItem('user', JSON.stringify(response.data));
                     }
                     commit(types.SET_SPINNER, { value: false })
@@ -50,7 +54,7 @@ const actions = {
                 })
                 .catch(error => {
                     commit(types.SET_SPINNER, { value: false })
-                    reject(data);
+                    reject(error);
                 })
         })
     },
@@ -61,7 +65,7 @@ const actions = {
                 .then(response => {
                     console.log("CURRENT ");
                     console.log(response);
-                    commit(types.SET_USER, {value: response.data});
+//                    commit(types.SET_USER, {value: response.data});
                     commit(types.SET_SPINNER, { value: false })
                     resolve(response);
                 })
@@ -71,7 +75,7 @@ const actions = {
                         .then(data => {
                             AuthService.getCurrentUser()
                                 .then(response => {
-                                    commit(types.SET_USER, {value: response.data});
+//                                    commit(types.SET_USER, {value: response.data});
                                     commit(types.SET_SPINNER, { value: false })
                                     resolve(response);
                                 })
@@ -89,11 +93,8 @@ const actions = {
                 .then(response => {
                     console.log(response);
                     localStorage.removeItem('user')
-//                    commit(types.REMOVE_TOKEN);
-                    commit(types.SET_USER, {value: null})
                     commit(types.SET_SPINNER, { value: false })
                     return response;
-
                 })
                 .catch(error => {
                     console.log("CATHING ERROR");
@@ -102,12 +103,10 @@ const actions = {
                             AuthService.logout()
                                 .then(response => {
 //                                    commit(types.REMOVE_TOKEN); 
-                                commit(types.SET_USER, {value: null})
                                 localStorage.removeItem('user')
                                  commit(types.SET_SPINNER, { value: false })
                                      return response;
                                 })
-                           
                         })
                         .catch(data => {
                          commit(types.SET_SPINNER, { value: false })
@@ -125,21 +124,18 @@ const mutations = {
         state.authAlerts.push(message)
         console.log(state.authAlerts)
     },
-    [types.SET_USER](state, {value}){
-        state.user = value;
+    [types.SET_TOKEN](state, {value}){
+        state.refreshToken= value.refreshToken;
+        state.accesstoken = value.accesstoken;
+        this.$cookies.set('refreshToken', value.refreshToken, '1d');
+        this.$cookies.set('accesstoken', value.accesstoken, '2min');
+    },
+    [types.REMOVE_TOKEN](state){
+        state.refreshToken = null;
+        state.accesstoken = null;
+        this.$cookies.remove('refreshToken');
+        this.$cookies.remove('accesstoken');
     }
-//    [types.SET_TOKEN](state, {value}){
-//        state.refreshToken= value.refreshToken;
-//        state.accesstoken = value.accesstoken;
-//        Cookie.set('refreshToken', value.refreshToken, '1d');
-//        Cookie.set('accesstoken', value.accesstoken, '2min');
-//    },
-//    [types.REMOVE_TOKEN](state){
-//        state.refreshToken = null;
-//        state.accesstoken = null;
-//        Cookie.remove('refreshToken');
-//        Cookie.remove('accesstoken');
-//    }
 }
 
 export default {
