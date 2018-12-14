@@ -1,6 +1,6 @@
 <template>
-    <v-layout row justify-center>
-        <v-dialog v-model="this.$parent.showAuth" persistent max-width="600px">
+    <v-layout row justify-center >
+        <v-dialog v-model="this.$parent.showAuth" persistent max-width="600px" min-heigth="300px">
                 <v-flex>
                     <v-tabs slot="extension" v-model="currentItem" color="#5badfe" slider-color="yellow">
                        <v-layout>

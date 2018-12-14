@@ -27,17 +27,19 @@ const getters = {
 const actions = {
     registration({ commit }, { formData }) {
         commit(types.SET_SPINNER, { value: true })
-        AuthService.registration(formData)
-            .then(data => {
-                commit(types.SET_SPINNER, { value: false })
-                commit(types.ADD_AUTH_ALERT, { value: 'Registration was successfull', variant: 'success' })
-                return data
-            })
-            .catch(error => {
-                commit(types.SET_SPINNER, { value: false })
-                commit(types.ADD_AUTH_ALERT, { value: error.response.data.message, variant: 'danger' })
-                console.log(error)
-            })
+        return new Promise((resolve, reject) => {
+            AuthService.registration(formData)
+                .then(data => {
+                    commit(types.SET_SPINNER, { value: false })
+                    commit(types.ADD_AUTH_ALERT, { value: 'Registration was successfull', variant: 'success' })
+                    resolve(data)
+                })
+                .catch(error => {
+                    commit(types.SET_SPINNER, { value: false })
+                    commit(types.ADD_AUTH_ALERT, { value: error.response.data.message, variant: 'danger' })
+                    reject(error)
+                })
+        })
     },
     login({ commit }, { user }) {
         commit(types.SET_SPINNER, { value: true })

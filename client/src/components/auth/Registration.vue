@@ -1,9 +1,13 @@
 <template>
     <v-container fluid fill-height>
         <v-layout justify-center>
-            <v-flex>
+            <v-flex v-if="isSuccessRegister">
+                <success-register :email="user.email"></success-register>
+            </v-flex>
+            <v-flex v-if="!isSuccessRegister">
                 <v-card-text>
-                    <form name="tab-tracker-form" v-model="valid" ref="form" lazy-validation>
+                   <div v-if='error' style="color:red;">{{error}}</div>
+                     <v-form v-model="valid" ref="form" lazy-validation>
                         <v-text-field v-model="user.name" label="Имя" :counter="25" :rules="rules.name" clearable required>
                         </v-text-field>
                         <v-text-field v-model="user.surname" label="Фамилия" :counter="25" :rules="rules.surname" clearable required>
@@ -17,7 +21,7 @@
                             <v-text-field label="Пароль" :counter="30" v-model="user.password" :rules="rules.password" :type="showPassword ? 'text' : 'password'" autocomplete="new-password"></v-text-field>
                             <v-text-field label="Подтвердите пароль" :counter="30" :type="showPassword ? 'text' : 'password'" v-model="repeatPassword" autocomplete="new-password" :rules="rules.repeatPassword" :append-icon="showPassword ? 'visibility_off' : 'visibility'" @click:append="showPassword = !showPassword"></v-text-field>
                         </v-layout>
-                    </form>
+                    </v-form>
                 </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -26,18 +30,23 @@
                         </v-btn>
                     </v-card-actions>
             </v-flex>
+            
         </v-layout>
     </v-container>
-
 </template>
 
 <script>
     import {
         mapActions
     } from 'vuex'
+    import successRegister from './SuccessRegister.vue'
     export default {
+        components:{
+            successRegister  
+        },
         data() {
             return {
+                valid: false,
                 user: {
                     name: '',
                     surname: '',
@@ -48,7 +57,7 @@
                 error: null,
                 showPassword: false,
                 repeatPassword: "",
-                valid: false,
+                isSuccessRegister: false,
                 emailRegex: /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
                 rules: {
                     name: [v => !!v || "Введите имя!"],
@@ -72,12 +81,18 @@
         methods: {
             ...mapActions(['registration']),
             sumbit() {
-//                if (this.$refs.form.validate()) {
+                this.isSuccessRegister = false;
+                this.error = null;
+                if(this.$refs.form.validate()){
                     this.registration({formData: this.user})
-                        .then(()=>{
-                            this.$emit('closeRegister', false)
+                        .then((response)=>{
+                            this.isSuccessRegister = true;
                         })
-//                }
+                        .catch((err)=>{
+                            this.error = `Email ${this.user.email} уже используется. Попробуйте другой`;
+                            this.isSuccessRegister = false;
+                        })
+                }
             }
         } 
     }
