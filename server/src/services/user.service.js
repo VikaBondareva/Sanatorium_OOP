@@ -63,17 +63,17 @@ async function getById(id) {
 }
 
 async function update(id, userParam) {
-    const user = await User.findById(id);
-
-    if (!user) throw 'User not found';
-    if (user.email !== userParam.email && await User.findOne({
+    await  User.findOneAndUpdate({_id: id}, {
+            name: userParam.name,
+            surname: userParam.surname,
+            patronymic: userParam.patronymic,
             email: userParam.email
-        })) {
-        throw 'Email "' + userParam.email + '" is already taken';
-    }
-    Object.assign(user, userParam);
+        }, function(err, user){
+            if(err) throw "invalid update user";
+            else 
+                return;
+        });
 
-    await user.save();
 }
 
 async function createCard(id, cardParam) {

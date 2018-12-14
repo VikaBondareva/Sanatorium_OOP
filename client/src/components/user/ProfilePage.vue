@@ -7,9 +7,11 @@
         </v-layout>
         <div class="card user-information">
             <div>
-                <span class="font-weight-bold">Email: {{user.email}}</span>
+                <span >Email: {{user.email}}</span>
             </div>
             <card-user :card='user.card' v-if="user.card!=={}"></card-user>
+            
+            <v-btn color="rgb(69, 152, 152)" style="width: 250px;" @click="goToEditProfile">Редактировать профиль</v-btn>
         </div>
 
         <div class="card" style="padding: 10px!important;">
@@ -88,16 +90,18 @@
             changeDate(item){
                 this.order= item;
                 this.editDate=true;
-            }
+            },
+            goToEditProfile(){
+                this.$router.push({name: 'editUser'})
+            }    
         },
         created() {
             this.getUser();
         },
         computed: {
-            //...mapGetters(['user']),
             totalPrice(){
                 var price =0.0;
-                var prices = document.getElementsByClassName('price');
+                var prices = document.querySelectorAll('.price');
                 for(var i=0; i<prices.length; i++){
                     price +=parseFloat(prices[i].textContent);
                 }
@@ -130,9 +134,12 @@
         margin-bottom: 20px;
         padding: 20px;
         height: 200px;
+        font: 17px sans-serif !important;
 /*        border: 1px solid;*/
     }
-
+    .user-information div{
+        
+    }
     .information {
         margin: 20px;
 

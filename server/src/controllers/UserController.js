@@ -25,7 +25,7 @@ function getCurrent(req, res, next){
 }
 function update(req,res,next){
     userService.update(req.userId,req.body)
-        .then(()=>res.json({message: "User saved"}))
+        .then(()=>res.json({message: "User update"}))
         .catch(err=>next(err))
 }
 

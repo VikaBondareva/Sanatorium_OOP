@@ -115,6 +115,35 @@ const actions = {
                             return data;
                         });
                 })
+    },
+    editUser({commit}, {user}){
+        commit(types.SET_SPINNER, { value: true })
+        return new Promise((resolve, reject) => {
+            AuthService.editProfile(user)
+                .then(response => {
+                    console.log("CURRENT ");
+                    console.log(response);
+//                    commit(types.SET_USER, {value: response.data});
+                    commit(types.SET_SPINNER, { value: false })
+                    resolve(response);
+                })
+                .catch(error => {
+                    console.log("CATHING ERROR");
+                    handleResponse(error.response)
+                        .then(data => {
+                            AuthService.editProfile(user)
+                                .then(response => {
+//                                    commit(types.SET_USER, {value: response.data});
+                                    commit(types.SET_SPINNER, { value: false })
+                                    resolve(response);
+                                })
+                        })
+                        .catch(data => {
+                            commit(types.SET_SPINNER, { value: false })
+                            reject(data);
+                        });
+                })
+        })
     }
 }
   

@@ -36,5 +36,13 @@ export default {
             url: '/api/auth/logout',
             headers: authHeader()
         })
+    },
+    editProfile(user){
+         return Axios.request({
+            method: 'PUT',
+            url: '/api/users/',
+            data: user,
+            headers: authHeader()
+        })
     }
 }   

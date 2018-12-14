@@ -1,19 +1,21 @@
 <template>
-  <div>
-       <div>
-        <span class="font-weight-bold">Адрес: {{card.addres}}</span>
+  <div class="info">
+
+                
+    <div>
+        <div >Адрес:   {{card.addres}}</div>
     </div>
     <div>
-        <span class="font-weight-bold">Телнфон: {{card.phone}}</span>
+        <div >Телнфон:   {{card.phone}}</div>
     </div>
     <div>
-        <span class="font-weight-bold">Дата рождения: {{card.birth.toString().substr(0,10)}}</span>
+        <div >Дата рождения:   {{card.birth.toString().substr(0,10)}}</div>
     </div>
     <div>
-        <span class="font-weight-bold">Дата заезда: {{card.dateArrival.toString().substr(0,10)}}</span>
+        <div >Дата заезда:   {{card.dateArrival.toString().substr(0,10)}}</div>
     </div>
     <div>
-        <span class="font-weight-bold">Дата выезда: {{card.dateDeparture.toString().substr(0,10)}}</span>
+        <div >Дата выезда:   {{card.dateDeparture.toString().substr(0,10)}}</div>
     </div>
   </div>
    
@@ -24,3 +26,10 @@
         props: ['card']
     }
 </script>
+
+
+<style scoped>
+    div.info > div{
+        font-family: 18px serif;
+    }
+</style>
