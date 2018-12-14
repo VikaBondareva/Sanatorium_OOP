@@ -10,7 +10,7 @@ import Cards from '@/components/admin/Cards.vue'
 import OrdersPage from '../components/admin/OrdersPage.vue'
 import ActiveOrders from '../components/admin/ActiveOrders.vue'
 import EditProfile from '../components/user/EditProfile.vue'
-
+import Schedules from '../components/admin/Schedules.vue'
 
 import store from '../store/store' // your vuex store 
 
@@ -44,6 +44,12 @@ const routes = [
         name: 'booking',
         component: BookingPage,
         meta:{requiredAuth:true}
+    },
+    {
+        path: '/schedules',
+        name: 'schedules',
+        component: Schedules,
+        meta:{requiredAuth:true,requiredAdmin:true}
     },
     {
         path: '/booking/cards',

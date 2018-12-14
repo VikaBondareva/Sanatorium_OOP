@@ -10,7 +10,7 @@
                         <tr>
                             <th class="th-sm">ФИО
                             </th>
-                            <th class="th-sm">Телефон для связи
+                            <th class="th-sm">Процедура
                             </th>
                             <th class="th-sm">Дата приема
                             </th>
@@ -23,7 +23,7 @@
                     <tbody v-for="(item, index) in orders">
                         <tr>
                             <td>{{item.user.name}} {{item.user.surname}} {{item.user.patronymic}}</td>
-                            <td >{{item.user.phone}}</td>
+                            <td >{{item.service.name}}</td>
                             <td>{{item.date | dateFilter}}</td>
                             <td>{{item.date | timeFilter}}</td>
                             <td>

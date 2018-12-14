@@ -1,7 +1,8 @@
 import AuthService from '../../api/auth-service'
 import * as types from '../mutation'
 import { handleResponse} from '../../helpers/handler.js'
-import cookie from '../../helpers/cookie.js'
+import {promise, promiseWithData} from '../promise.js'
+//import cookie from '../../helpers/cookie.js'
 //import Cookie from 'vue-cookies'
 
 const state = {
@@ -28,122 +29,141 @@ const actions = {
     registration({ commit }, { formData }) {
         commit(types.SET_SPINNER, { value: true })
         return new Promise((resolve, reject) => {
-            AuthService.registration(formData)
+             promiseWithData({func: AuthService.registration}, {formData}, {commit})
                 .then(data => {
-                    commit(types.SET_SPINNER, { value: false })
                     commit(types.ADD_AUTH_ALERT, { value: 'Registration was successfull', variant: 'success' })
                     resolve(data)
                 })
                 .catch(error => {
-                    commit(types.SET_SPINNER, { value: false })
                     commit(types.ADD_AUTH_ALERT, { value: error.response.data.message, variant: 'danger' })
                     reject(error)
                 })
+//            AuthService.registration(formData)
+//                .then(data => {
+//                    commit(types.SET_SPINNER, { value: false })
+//                    commit(types.ADD_AUTH_ALERT, { value: 'Registration was successfull', variant: 'success' })
+//                    resolve(data)
+//                })
+//                .catch(error => {
+//                    commit(types.SET_SPINNER, { value: false })
+//                    commit(types.ADD_AUTH_ALERT, { value: error.response.data.message, variant: 'danger' })
+//                    reject(error)
+//                })
         })
     },
     login({ commit }, { user }) {
         commit(types.SET_SPINNER, { value: true })
         return new Promise((resolve, reject) => {
-            AuthService.login(user)
+//            AuthService.login(user)
+            promiseWithData({func:AuthService.login}, {formData: user}, {commit})
                 .then(response => {
                     console.log("SUCCESSFULLY LOGIN_____");
                     console.log(response);
                     if (response.data.accessToken) {
                         localStorage.setItem('user', JSON.stringify(response.data));
                     }
-                    commit(types.SET_SPINNER, { value: false })
                     resolve(response);
                 })
                 .catch(error => {
-                    commit(types.SET_SPINNER, { value: false })
                     reject(error);
                 })
         })
     },
     getCurrentUser({ commit }) {
-        commit(types.SET_SPINNER, { value: true })
-        return new Promise((resolve, reject) => {
-            AuthService.getCurrentUser()
-                .then(response => {
-                    console.log("CURRENT ");
-                    console.log(response);
-//                    commit(types.SET_USER, {value: response.data});
-                    commit(types.SET_SPINNER, { value: false })
-                    resolve(response);
-                })
-                .catch(error => {
-                    console.log("CATHING ERROR");
-                    handleResponse(error.response)
-                        .then(data => {
-                            AuthService.getCurrentUser()
-                                .then(response => {
-//                                    commit(types.SET_USER, {value: response.data});
-                                    commit(types.SET_SPINNER, { value: false })
-                                    resolve(response);
-                                })
-                        })
-                        .catch(data => {
-                            commit(types.SET_SPINNER, { value: false })
-                            reject(data);
-                        });
-                })
-        })
+          commit(types.SET_SPINNER, { value: true })
+          return promise({func: AuthService.getCurrentUser}, {commit});
+//        return new Promise((resolve, reject) => {
+//            AuthService.getCurrentUser()
+//                .then(response => {
+//                    console.log("CURRENT ");
+//                    console.log(response);
+////                    commit(types.SET_USER, {value: response.data});
+//                    commit(types.SET_SPINNER, { value: false })
+//                    resolve(response);
+//                })
+//                .catch(error => {
+//                    console.log("CATHING ERROR");
+//                    handleResponse(error.response)
+//                        .then(data => {
+//                            AuthService.getCurrentUser()
+//                                .then(response => {
+////                                    commit(types.SET_USER, {value: response.data});
+//                                    commit(types.SET_SPINNER, { value: false })
+//                                    resolve(response);
+//                                })
+//                        })
+//                        .catch(data => {
+//                            commit(types.SET_SPINNER, { value: false })
+//                            reject(data);
+//                        });
+//                })
+//        })
     },
     logout({commit}){
         commit(types.SET_SPINNER, { value: true })
-            AuthService.logout()
-                .then(response => {
-                    console.log(response);
-                    localStorage.removeItem('user')
-                    commit(types.SET_SPINNER, { value: false })
-                    return response;
-                })
-                .catch(error => {
-                    console.log("CATHING ERROR");
-                    handleResponse(error.response)
-                        .then(data => {
-                            AuthService.logout()
-                                .then(response => {
-//                                    commit(types.REMOVE_TOKEN); 
-                                localStorage.removeItem('user')
-                                 commit(types.SET_SPINNER, { value: false })
-                                     return response;
-                                })
-                        })
-                        .catch(data => {
-                         commit(types.SET_SPINNER, { value: false })
-                            return data;
-                        });
-                })
+        promise({func:AuthService.logout}, {commit})
+            .then(response => {
+                localStorage.removeItem('user')
+                return response;
+            })
+            .catch(data => {
+                return data;
+            });
+                
+//            AuthService.logout()
+//                .then(response => {
+//                    console.log(response);
+//                    localStorage.removeItem('user')
+//                    commit(types.SET_SPINNER, { value: false })
+//                    return response;
+//                })
+//                .catch(error => {
+//                    console.log("CATHING ERROR");
+//                    handleResponse(error.response)
+//                        .then(data => {
+//                            AuthService.logout()
+//                                .then(response => {
+////                                    commit(types.REMOVE_TOKEN); 
+//                                localStorage.removeItem('user')
+//                                 commit(types.SET_SPINNER, { value: false })
+//                                     return response;
+//                                })
+//                        })
+//                        .catch(data => {
+//                         commit(types.SET_SPINNER, { value: false })
+//                            return data;
+//                        });
+//                })
     },
     editUser({commit}, {user}){
         commit(types.SET_SPINNER, { value: true })
-        return new Promise((resolve, reject) => {
-            AuthService.editProfile(user)
-                .then(response => {
-                    console.log("CURRENT ");
-                    console.log(response);
-//                    commit(types.SET_USER, {value: response.data});
-                    commit(types.SET_SPINNER, { value: false })
-                    resolve(response);
-                })
-                .catch(error => {
-                    console.log("CATHING ERROR");
-                    handleResponse(error.response)
-                        .then(data => {
-                            AuthService.editProfile(user)
-                                .then(response => {
-//                                    commit(types.SET_USER, {value: response.data});
-                                    commit(types.SET_SPINNER, { value: false })
-                                    resolve(response);
-                                })
-                        })
-                        .catch(data => {
-                            commit(types.SET_SPINNER, { value: false })
-                            reject(data);
-                        });
-                })
-        })
+        return promiseWithData({func: AuthService.editProfile},{formData: user}, {commit});
+//        return new Promise((resolve, reject) => {
+//            AuthService.editProfile(user)
+//                .then(response => {
+//                    console.log("CURRENT ");
+//                    console.log(response);
+////                    commit(types.SET_USER, {value: response.data});
+//                    commit(types.SET_SPINNER, { value: false })
+//                    resolve(response);
+//                })
+//                .catch(error => {
+//                    console.log("CATHING ERROR");
+//                    handleResponse(error.response)
+//                        .then(data => {
+//                            AuthService.editProfile(user)
+//                                .then(response => {
+////                                    commit(types.SET_USER, {value: response.data});
+//                                    commit(types.SET_SPINNER, { value: false })
+//                                    resolve(response);
+//                                })
+//                        })
+//                        .catch(data => {
+//                            commit(types.SET_SPINNER, { value: false })
+//                            reject(data);
+//                        });
+//                })
+//        })
     }
 }
   

@@ -12,6 +12,8 @@
                             </th>
                             <th class="th-sm">Телефон для связи
                             </th>
+                            <th class="th-sm">Процедура
+                            </th>
                             <th class="th-sm">Дата приема
                             </th>
                             <th class="th-sm">Время приема
@@ -22,6 +24,7 @@
                         <tr>
                             <td>{{item.user.name}} {{item.user.surname}} {{item.user.patronymic}}</td>
                             <td>{{item.user.phone}}</td>
+                            <td>{{item.service.name}}</td>
                             <td>{{item.date |dateFilter}}</td>
                             <td>{{item.date | timeFilter}}</td>
                         </tr>

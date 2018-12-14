@@ -42,6 +42,7 @@
                         <b-dropdown text="УПРАВЛЕНИЕ" >
                             <b-dropdown-item @click="serviseRequest">ЗАЯВКИ НА УСЛУГИ</b-dropdown-item>
                             <b-dropdown-item @click="serviseActive">АКТИВНЫЕ ЗАЯВКИ</b-dropdown-item>
+                            <b-dropdown-item @click="scheduleService">ПРОСМОТР РАСПИСАНИЯ</b-dropdown-item>
                             <b-dropdown-item @click="bookingArrival">КАРТОЧКИ УЧАЩИХСЯ</b-dropdown-item>
 <!--
                             <b-dropdown-item>Third Action</b-dropdown-item>
@@ -142,6 +143,9 @@
             serviseActive(){
                 this.$router.push({name: 'ordersActive'})
             },
+            scheduleService(){
+                this.$router.push({name: 'schedules'})
+            }
         },
         computed:{
             ...mapGetters(['isAuthenticated', 'isAdmin', 'isAuth'])
