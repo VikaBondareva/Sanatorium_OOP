@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser= require('body-parser');
 const cors= require('cors');
 const morgan = require('morgan');
+//const cookieParser = require('cookie-parser');
 const config= require('./config/config');
 const mongoose=require('mongoose');
 const {user,auth, service, admin}= require('./routes/index.js');
@@ -20,6 +21,8 @@ app.use(user);
 app.use(auth);
 app.use(admin);
 app.use(service);
+
+//app.user(cookieParser);
 
 app.use(errorHandler);
 
