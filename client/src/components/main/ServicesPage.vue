@@ -62,18 +62,16 @@
                                             </v-date-picker>
                                         </v-menu>
                                     </div>
-<!--
                                     <div class="form-group">
                                         <v-menu ref="menu2" :close-on-content-click="false" v-model="menu2" :return-value.sync="time">
                                             <v-text-field slot="activator" v-model="time" label="Время приема" prepend-icon="event" readonly></v-text-field>
-                                            <v-time-picker v-model="time" :allowed-hours="allowedHours" :allowed-minutes="allowedMinutes" class="mt-3" format="24hr" scrollable min="9:30" max="19:00">
+                                            <v-time-picker v-model="time"  class="mt-3" format="24hr" scrollable min="7:30" max="19:00">
                                                 <v-spacer></v-spacer>
                                                 <v-btn flat color="primary" @click="menu2 = false">Cancel</v-btn>
                                                 <v-btn flat color="primary" @click="$refs.menu2.save(time)">OK</v-btn>
                                             </v-time-picker>
                                         </v-menu>
                                     </div>
--->
                                     <v-btn @click="order">Записаться на прием</v-btn>
                                 </div>
                                 <div v-if="error" style=" margin-top: 20px; margin-left: 20px;">
@@ -136,7 +134,7 @@
                 date: new Date().toISOString().substr(0, 10),
                 menu: false,
                 menu2: false,
-                time: '11:15',
+                time: '7:30',
                 making: {
                     service_id: '',
                     date: ''
@@ -151,9 +149,15 @@
                         this.types = response.data
                     })
             },
+            formatDate(date,time){
+                let timeFormat = time.split(':');
+                if(timeFormat[0]<10)
+                    timeFormat[0]='0'+timeFormat[0];
+                return `${date}T${timeFormat[0]}:${timeFormat[1]}:00Z`;
+            }, 
             order() {
                 this.error = null;
-                this.making.date = this.date;
+                this.making.date = this.formatDate(this.date,this.time)
                 this.orderService({
                         formData: this.making
                     })
@@ -191,6 +195,7 @@
                 const services = this.types.find(x => x._id === this.typeSelect)["services"];
                 return services;
             }
+               
         }
     }
 

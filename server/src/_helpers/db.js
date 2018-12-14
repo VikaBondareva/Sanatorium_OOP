@@ -1,6 +1,7 @@
 const {User, Roles, UserRole} = require('../models/user');
 const {Services, TypesService} = require('../models/service');
 const {Cards, Orders, Statuts}= require('../models/sanatorium.js');
+const {Schedule} = require('../models/shedule.js')
 const Token = require('../models/token.js');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -14,5 +15,6 @@ module.exports = {
     Cards,
     Orders,
     Statuts,
-    Token
+    Token,
+    Schedule
 };

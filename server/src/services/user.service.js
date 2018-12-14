@@ -4,6 +4,7 @@ const Cards = db.Cards;
 const Orders = db.Orders;
 const Service = db.Services;
 const Statuts = db.Statuts;
+const Schedule = db.Schedule;
 
 module.exports = {
     update,
@@ -134,7 +135,12 @@ async function orderService(orderParam, idUser) {
         date: orderParam.date,
         statusOrder_id: status._id
     })
-    await order.save()
+    const check = await checkSchedule(orderParam.service_id,orderParam.date );
+    if(check){
+        await order.save();
+//        const idOrder = Orders.find({card_id: card.id, service_id: orderParam.service_id});
+        await createSchedule(card._id, orderParam.service_id,orderParam.date )
+    } 
 }
 
 async function deleteOrder(id) {
@@ -160,5 +166,27 @@ async function getCurrentCardUser(id) {
         user_id: id
     });
     return card;
+}
+
+async function createSchedule(card_id, service_id,date ){
+//    await Schedule.create({order_id,service_id,date}, function(err){
+//        if(err) throw new Error("Don't saved shedule.Error: "+error);
+//    });
+    const schedule = new Schedule({
+        card_id: card_id,
+        service_id: service_id,
+        date: date
+    });
+    await schedule.save(function(err){
+        if(err) throw new Error("Don't saved shedule.Error: "+err);
+    });
+}
+
+async function checkSchedule(service_id,date){
+    const schedule = await Schedule.find({ service_id, date});
+    if(schedule._id) {
+        throw "This date alredy has. shedule: "+schedule._id;
+    }
+    return true;
 }
 
