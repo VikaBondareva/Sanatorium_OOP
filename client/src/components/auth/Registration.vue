@@ -2,7 +2,8 @@
     <v-container fluid fill-height>
         <v-layout justify-center>
             <v-flex>
-                    <form name="tab-tracker-form" v-model="valid" ref="form" autocomplete="off">
+                <v-card-text>
+                    <form name="tab-tracker-form" v-model="valid" ref="form" lazy-validation>
                         <v-text-field v-model="user.name" label="Имя" :counter="25" :rules="rules.name" clearable required>
                         </v-text-field>
                         <v-text-field v-model="user.surname" label="Фамилия" :counter="25" :rules="rules.surname" clearable required>
@@ -17,7 +18,7 @@
                             <v-text-field label="Подтвердите пароль" :counter="30" :type="showPassword ? 'text' : 'password'" v-model="repeatPassword" autocomplete="new-password" :rules="rules.repeatPassword" :append-icon="showPassword ? 'visibility_off' : 'visibility'" @click:append="showPassword = !showPassword"></v-text-field>
                         </v-layout>
                     </form>
-                    <br>
+                </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn dark class="cyan" @click="sumbit">
@@ -71,11 +72,12 @@
         methods: {
             ...mapActions(['registration']),
             sumbit() {
-                this.registration({formData: this.user})
-                    .then(()=>{
-                        this.$emit('closeRegister', false)
-                    })
-                    
+//                if (this.$refs.form.validate()) {
+                    this.registration({formData: this.user})
+                        .then(()=>{
+                            this.$emit('closeRegister', false)
+                        })
+//                }
             }
         } 
     }

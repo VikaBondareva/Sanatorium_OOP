@@ -23,6 +23,14 @@ import 'vuetify/dist/vuetify.min.css'
 import './assets/styles/app.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
+
+// set default config
+VueCookies.config('7d')
+
+// set global cookie
+VueCookies.set('theme','default');
+VueCookies.set('hover-time','1s');
+
 new Vue({
     el: '#app',
     router,

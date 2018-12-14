@@ -93,7 +93,6 @@ const actions = {
                 .then(response => {
                     console.log(response);
                     localStorage.removeItem('user')
-//                    commit(types.SET_USER, {value: null})
                     commit(types.SET_SPINNER, { value: false })
                     return response;
                 })
@@ -104,7 +103,6 @@ const actions = {
                             AuthService.logout()
                                 .then(response => {
 //                                    commit(types.REMOVE_TOKEN); 
-//                                commit(types.SET_USER, {value: null})
                                 localStorage.removeItem('user')
                                  commit(types.SET_SPINNER, { value: false })
                                      return response;
@@ -125,9 +123,6 @@ const mutations = {
     [types.ADD_AUTH_ALERT](state, message) {
         state.authAlerts.push(message)
         console.log(state.authAlerts)
-    },
-    [types.SET_USER](state, {value}){
-        state.user = value;
     },
     [types.SET_TOKEN](state, {value}){
         state.refreshToken= value.refreshToken;
