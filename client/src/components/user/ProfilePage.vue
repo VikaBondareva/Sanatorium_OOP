@@ -5,15 +5,18 @@
         <v-layout column align-center>
             <h3 class="text-center font-weight-bold text-uppercase py-4">{{user.surname}} {{user.name}} {{user.patronymic}}</h3>
         </v-layout>
-        <div class="card user-information">
+             <div class="card user-information">
+                     <v-flex>
+                      <v-btn color="rgb(69, 152, 152)" style="width: 250px;" @click="goToEditProfile">Редактировать профиль</v-btn>
+            <v-btn color="rgb(69, 152, 152)" style="width: 250px;" @click="cancelArrival">Отменить заезд</v-btn>
+
             <div>
                 <span >Email: {{user.email}}</span>
             </div>
             <card-user :card='user.card' v-if="user.card!=={}"></card-user>
-            
-            <v-btn color="rgb(69, 152, 152)" style="width: 250px;" @click="goToEditProfile">Редактировать профиль</v-btn>
-        </div>
-
+                    </v-flex>
+            </div>
+        
         <div class="card" style="padding: 10px!important;">
             <h4 class="text-center font-weight-bold text-uppercase py-3">Забронированные услуги</h4>
             <table class="table table-hover table-bordered" >
@@ -76,7 +79,7 @@
             }
         },
         methods: {
-            ...mapActions(['getCurrentUser', 'changeDateOfVisit']),
+            ...mapActions(['getCurrentUser', 'changeDateOfVisit', 'cancelBookingCard']),
             getUser() {
                 this.getCurrentUser()
                     .then(response=>{
@@ -93,7 +96,10 @@
             },
             goToEditProfile(){
                 this.$router.push({name: 'editUser'})
-            }    
+            },
+            cancelArrival(){
+                this.cancelBookingCard()
+            }
         },
         created() {
             this.getUser();
