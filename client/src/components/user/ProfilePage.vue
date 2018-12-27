@@ -8,10 +8,23 @@
              <div class="card user-information">
                      <v-flex>
                       <v-btn color="rgb(69, 152, 152)" style="width: 250px;" @click="goToEditProfile">Редактировать профиль</v-btn>
-            <v-btn color="rgb(69, 152, 152)" style="width: 250px;" @click="cancelArrival">Отменить заезд</v-btn>
+            <v-btn v-if="user.card!=={}" color="rgb(69, 152, 152)" style="width: 250px;" @click="cancelArrival">Отменить заезд</v-btn>
 
             <div>
                 <span >Email: {{user.email}}</span>
+        
+            </div>
+            <div>
+                <span >Телеофн: {{user.phone | checkField}}</span>
+        
+            </div>
+            <div>
+                <span >Дата рождения: {{user.birth | checkField}}</span>
+        
+            </div>
+            <div>
+                <span >адрес прописки: {{user.addres | checkField}}</span>
+        
             </div>
             <card-user :card='user.card' v-if="user.card!=={}"></card-user>
                     </v-flex>
@@ -129,7 +142,12 @@
               var year = date.getFullYear();
 
               return day + ' ' + monthNames[monthIndex] + ', ' + year;
-            }
+            },
+                checkField(item){
+                    if(!item || item==="")
+                        return "неустановлено"
+                    return item
+                }
         }
     }
 </script>

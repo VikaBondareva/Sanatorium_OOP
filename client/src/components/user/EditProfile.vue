@@ -59,7 +59,7 @@
                             <v-subheader>Адрес проживания</v-subheader>
                         </v-flex>
                         <v-flex xs5>
-                            <v-text-field v-model="user.address"></v-text-field>
+                            <v-text-field v-model="user.addres"></v-text-field>
                         </v-flex>
                     </v-layout>
                     <v-layout row>

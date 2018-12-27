@@ -62,7 +62,7 @@
 //                            this.method();
                         })
                         .catch((err) => {
-                            this.error = "Неверной email или пароль"+err;
+                            this.error = "Неверной email или пароль";
                             this.showError = true;
                         })
                 }
