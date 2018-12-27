@@ -4,6 +4,10 @@
 
 
             <v-flex xs10>
+                <div v-if="result!==''">  
+                    <h3 v-if="result.success">{{result.message}}</h3>
+                    <h3 v-if="!result.success" style="color: red;">{{result.message}}</h3>
+                </div>
                 <div class="card" style="padding: 10px!important;">
                     <v-layout row>
                         <v-text-field v-model="user.name" label="Имя" readonly required>
@@ -15,12 +19,10 @@
                     </v-layout>
                     <v-form ref="form" v-model="valid" lazy-validation>
                         <v-layout row>
-                            <v-text-field v-model="card.phone" mask="+### (##) ###-##-##" label="Телефон" :rules="rules.phone" type="text" clearable required>
+                            <v-text-field v-model="user.phone" mask="+### (##) ###-##-##" label="Телефон"  type="text" readonly required>
                             </v-text-field>
-                            <v-menu ref="menu" :close-on-content-click="false" v-model="menu" :nudge-right="40" lazy transition="scale-transition" offset-y full-width>
-                                <v-text-field required   :rules="rules.birth" slot="activator" v-model="card.birth" label="Дата рождения" prepend-icon="event" readonly></v-text-field >
-                                <v-date-picker ref="picker" v-model="card.birth" locale="ru-by" :max="new Date().toISOString().substr(0, 10)" min="1950-01-01" @change="save"></v-date-picker>
-                            </v-menu>
+                             <v-text-field v-model="user.birth" label="Дата рождения"  type="text" readonly required>
+                            </v-text-field>
                         </v-layout>
                         <v-layout row>
                             <!--                        <v-text-field v-model="card.dateArrival" @click="showDatePicker('arrival')" @arrival="setDateArrival" label="Дата заезда" slot="activator" prepend-icon="event" readonly :rules="rules.dateArrival" required>-->
@@ -42,17 +44,13 @@
                                     <v-btn flat color="primary" @click="$refs.menu2.save(card.dateDeparture)">OK</v-btn>
                                 </v-date-picker>
                             </v-menu>
-                            <!--                        <v-text-field v-model="card.dateDeparture" @click="showDatePicker('departure')" @departure='setDateDeparture' label="Дата отьезда" slot="activator" prepend-icon="event" readonly :rules="rules.dateDeparture" required>-->
-                            <!--                        </v-text-field>-->
                         </v-layout>
-                        <v-text-field v-model="card.addres" label="Адресс проживания" :counter="50" :rules="rules.addres" type="text" clearable required>
-                        </v-text-field>
                         <v-checkbox v-model="checkbox" checked="false" :rules="[v => !!v || 'You must agree to continue!']" label="Do you agree?" required></v-checkbox>
 
                         <v-btn :disabled="!valid" @click="submit">
                             Зарегестрироваться
                         </v-btn>
-                        <v-btn @click="clear">Очистить все поля</v-btn>
+<!--                        <v-btn @click="clear">Очистить все поля</v-btn>-->
                     </v-form>
                 </div>
             </v-flex>
@@ -77,9 +75,6 @@
         data() {
             return {
                 card: {
-                    phone: '',
-                    addres: '',
-                    birth: '',
                     dateArrival: '',
                     dateDeparture: ''
                 },
@@ -89,7 +84,12 @@
                 menu1: false,
                 menu2: false,
                 modal: false,
-                error: null,
+                error: "Вы уже забронированили",
+                success: "Заявка отправлена",
+                result:{
+                    message: '',
+                    succes:''
+                },
                 showPassword: false,
                 repeatPassword: "",
                 valid: false,
@@ -138,10 +138,19 @@
                 this.card.dateDeparture = date;
             },
             submit() {
+                this.result.message="";
+                 this.result.success="";
                 if (this.$refs.form.validate()) {
-                    this.registrationCard({
-                        formData: this.card
-                    })
+                    this.registrationCard({formData: this.card})
+                        .then(()=>{
+                            this.result.message = this.success;
+                            this.result.succes= true;
+                        })
+                        .catch(()=>{
+                            this.result.message = this.error;
+                            this.result.succes= false;
+                        })
+                    
                 }
             }
         },

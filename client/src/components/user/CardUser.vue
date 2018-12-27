@@ -1,16 +1,7 @@
 <template>
   <div class="info">
 
-                
-    <div>
-        <div >Адрес:   {{card.addres}}</div>
-    </div>
-    <div>
-        <div >Телнфон:   {{card.phone}}</div>
-    </div>
-    <div>
-        <div >Дата рождения:   {{card.birth.toString().substr(0,10)}}</div>
-    </div>
+
     <div>
         <div >Дата заезда:   {{card.dateArrival.toString().substr(0,10)}}</div>
     </div>
