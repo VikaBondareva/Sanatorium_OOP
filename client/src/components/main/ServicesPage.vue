@@ -33,7 +33,10 @@
                         
                     </v-layout>
                     <v-flex xs4 v-if='isAuthenticated'>
+                      
+                          <order-service :types='types'></order-service>
                        
+<!--
                         <div class="order">
                             <div class="order__title">
                                 <h3>Запись на прием</h3>
@@ -80,6 +83,7 @@
                                 </div>
                             </div>
                         </div>
+-->
                         <div class="order order_formAdd" v-if='isAdmin'>
                             <div class="order__title">
                                 <h3>Добавления услуг</h3>
@@ -88,19 +92,6 @@
                                 <v-btn @click='addService'>Довавить услугу</v-btn>
                         </div>
                     </v-flex>
-                    
-<!--                    <v-flex xs4 v-if='isAdmin'>-->
-<!--
-                        <div class="order" v-if='isAdmin'>
-                            <div class="order__title">
-                                <h3>Добавления услуг</h3>
-                            </div>
-                                <v-btn @click="addType">Добавить тип услуг</v-btn>
-                                <v-btn @click='addService'>Довавить услугу</v-btn>
-                        </div>
--->
-<!--                    </v-flex>-->
-                    
                 </v-layout>
             </v-flex>
         </v-layout>
@@ -117,9 +108,10 @@
     } from 'vuex'
     import addTypeDialog from './admin/AddTypeDialog.vue'
      import addServiceDialog from './admin/AddSeriviceDialog.vue'
+    import orderService from './temp/OrderService.vue'
     export default {
         components:{
-            addTypeDialog, addServiceDialog
+            addTypeDialog, addServiceDialog, orderService
         },
         data() {
             return {
@@ -127,18 +119,18 @@
                 addServiceShow: false,
                 fields: ['№', 'Наименование платной медицинской услуги', 'Еденица измерения', 'Цены, бел. руб'],
                 types: '',
-                typeSelect: '',
-                error: null,
-                errorDate: "На эту дату вы уже записались на прием. Выберите другую дату приема или другую процедуру.",
-                errorCard: "У вас нет карточки. Пожалусйта зарегестрируйте сначало карточку посещения санатория!!",
-                date: new Date().toISOString().substr(0, 10),
-                menu: false,
-                menu2: false,
-                time: '7:30',
-                making: {
-                    service_id: '',
-                    date: ''
-                }
+//                typeSelect: '',
+//                error: null,
+//                errorDate: "На эту дату вы уже записались на прием. Выберите другую дату приема или другую процедуру.",
+//                errorCard: "У вас нет карточки. Пожалусйта зарегестрируйте сначало карточку посещения санатория!!",
+//                date: new Date().toISOString().substr(0, 10),
+//                menu: false,
+//                menu2: false,
+//                time: '7:30',
+//                making: {
+//                    service_id: '',
+//                    date: ''
+//                }
             }
         },
         methods: {
@@ -155,19 +147,19 @@
                     timeFormat[0]='0'+timeFormat[0];
                 return `${date}T${timeFormat[0]}:${timeFormat[1]}:00Z`;
             }, 
-            order() {
-                this.error = null;
-                this.making.date = this.formatDate(this.date,this.time)
-                this.orderService({
-                        formData: this.making
-                    })
-                    .catch((err) => {
-                        if (err === "error date")
-                            this.error = this.errorDate;
-                        else if (err === "error card")
-                            this.error = this.errorCard;
-                    })
-            },
+//            order() {
+//                this.error = null;
+//                this.making.date = this.formatDate(this.date,this.time)
+//                this.orderService({
+//                        formData: this.making
+//                    })
+//                    .catch((err) => {
+//                        if (err === "error date")
+//                            this.error = this.errorDate;
+//                        else if (err === "error card")
+//                            this.error = this.errorCard;
+//                    })
+//            },
             addType(){
                 this.addTypeShow =true;   
             },
@@ -177,9 +169,9 @@
             getTypes(){
                 return this.types;
             },
-            allowedHours: v => v % 2,
-            allowedMinutes: v => v >= 10 && v <= 50,
-            allowedStep: m => m % 10 === 0
+//            allowedHours: v => v % 2,
+//            allowedMinutes: v => v >= 10 && v <= 50,
+//            allowedStep: m => m % 10 === 0
         },
         created() {
             this.getServicesAll();
@@ -191,17 +183,17 @@
         },
         computed: {
             ...mapGetters(['isAdmin','isAuthenticated']),
-            getServicesType() {
-                const services = this.types.find(x => x._id === this.typeSelect)["services"];
-                return services;
-            }
+//            getServicesType() {
+//                const services = this.types.find(x => x._id === this.typeSelect)["services"];
+//                return services;
+//            }
                
         }
     }
 
 </script>
 
-<style scoped>
+<style>
     .order_formAdd{
         margin-top: 40px!important;
     }
