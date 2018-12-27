@@ -41,25 +41,6 @@ async function getById(id) {
     let JsonUser = user.toObject();
 
     JsonUser.card = await getFullCurrentCardUser(user._id);
-//    let card = await Cards.findOne({
-//        user_id: user._id
-//    });
-//    JsonUser["orders"] = [];
-//    if (!card) {
-//        return JsonUser;
-//    };
-//    const orders = await Orders.find({
-//        card_id: card._id
-//    }).sort({date: 1});
-//    const JsonOrsers = [];
-//    for (let i = 0; i < orders.length; i++) {
-//        JsonOrsers.push(orders[i].toObject())
-//        const service = await Service.findById(orders[i].service_id);
-//        JsonOrsers[i]["service"] = service;
-//        delete JsonOrsers[i]["service_id"];
-//    }
-//
-//    JsonUser["orders"] = JsonOrsers;
     return JsonUser;
 }
 
@@ -68,7 +49,10 @@ async function update(id, userParam) {
             name: userParam.name,
             surname: userParam.surname,
             patronymic: userParam.patronymic,
-            email: userParam.email
+            email: userParam.email,
+            addres: userParam.addres,
+            phone: userParam.phone,
+            bith: userParam.birth
         }, function(err, user){
             if(err) throw "invalid update user";
             else 
@@ -90,9 +74,6 @@ async function createCard(id, cardParam) {
     }
     const card = new Cards({
         user_id: id,
-        phone: cardParam.phone,
-        addres: cardParam.addres,
-        birth: cardParam.birth,
         dateArrival: cardParam.dateArrival,
         dateDeparture: cardParam.dateDeparture,
         statusCard_id: status._id
@@ -138,7 +119,6 @@ async function orderService(orderParam, idUser) {
     const check = await checkSchedule(orderParam.service_id,orderParam.date );
     if(check){
         await order.save();
-//        const idOrder = Orders.find({card_id: card.id, service_id: orderParam.service_id});
         await createSchedule(card._id, orderParam.service_id,orderParam.date )
     } 
 }

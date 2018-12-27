@@ -10,18 +10,6 @@ var CardSchema = new Schema (
             required: true,
             unique: true
         },
-        birth: {
-            type: mongoose.Schema.Types.Date,
-            required: true
-        },
-        phone: {
-            type: String,
-            required: true
-        },
-        addres: {
-            type: String,
-            required: true
-        },
         statusCard_id:{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'statuscard',
@@ -34,12 +22,7 @@ var CardSchema = new Schema (
         dateDeparture:{
             type: mongoose.Schema.Types.Date,
             required: true
-        },
-        totalPrice:{
-            type: mongoose.Schema.Types.Double,
-            default: 0.0
         }
-        
     },
     { versionKey: false }
 );

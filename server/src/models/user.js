@@ -16,6 +16,15 @@ var UserSchema = new Schema(
             type: String,
             required: true
         },
+        birth: {
+            type: mongoose.Schema.Types.Date,
+        },
+        phone: {
+            type: String,
+        },
+        addres: {
+            type: String,
+        },
         email: {
             type: String,
             required: true,
