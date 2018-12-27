@@ -23,7 +23,7 @@ var ScheduleSchema = new mongoose.Schema(
 
 ScheduleSchema.set('toJSON', { virtuals: true});
 
-var Schedule= mongoose.model('schedule', ScheduleSchema)
+var Schedule= mongoose.model('schedules', ScheduleSchema)
 module.exports ={
     Schedule
 }

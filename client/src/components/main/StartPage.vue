@@ -104,6 +104,7 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex'
     export default {
         data() {
             return {
@@ -135,10 +136,10 @@
                 this.$router.push({
                     name: 'booking'
                 })
-            },
-            isAuthentication(){
-                return this.$store.getters.isAuthenticated;
             }
+        },
+        computed:{
+            ...mapGetters(['isAuthenticated'])
         }
     }
 

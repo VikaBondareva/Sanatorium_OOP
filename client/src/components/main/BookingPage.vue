@@ -83,6 +83,7 @@
                     dateArrival: '',
                     dateDeparture: ''
                 },
+                user:"",
                 date: null,
                 menu: false,
                 menu1: false,
@@ -119,7 +120,10 @@
                 this.modal = true;
             },
             getUser() {
-                this.getCurrentUser();
+                this.getCurrentUser()
+                    .then((response)=>{
+                        this.user = response.data;
+                    })
             },
             save(date) {
                 this.$refs.menu.save(date)
@@ -143,9 +147,6 @@
         },
         created() {
             this.getUser();
-        },
-        computed: {
-            ...mapGetters(['user'])
         }
     }
 
