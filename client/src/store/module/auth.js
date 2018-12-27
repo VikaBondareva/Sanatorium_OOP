@@ -75,6 +75,10 @@ const actions = {
     editUser({commit}, {user}){
         commit(types.SET_SPINNER, { value: true })
         return promiseWithData({func: AuthService.editProfile},{formData: user}, {commit});
+    },
+    cancelBookingCard({commit}){
+        commit(types.SET_SPINNER, { value: true })
+        return promise({func: AuthService.cancelBookingCard},{commit});
     }
 }
   

@@ -43,7 +43,14 @@
                             <v-subheader>Дата рождения</v-subheader>
                         </v-flex>
                         <v-flex xs5>
-                            <v-text-field v-model="user.birth"></v-text-field>
+                                    <v-menu ref="menu" :close-on-content-click="false" v-model="menu" :return-value.sync="date">
+                                            <v-text-field slot="activator" v-model="user.birth" prepend-icon="event" readonly></v-text-field>
+                                            <v-date-picker id="service_datepiker" v-model="user.birth" no-title>
+                                                <v-spacer></v-spacer>
+                                                <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                                                <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                                            </v-date-picker>
+                                    </v-menu>
                         </v-flex>
                     </v-layout>
                      <v-layout row>
@@ -70,14 +77,6 @@
                             <v-text-field v-model="user.phone"></v-text-field>
                         </v-flex>
                     </v-layout>
-                    <v-layout row>
-                        <v-flex xs5>
-                            <v-subheader>Пол</v-subheader>
-                        </v-flex>
-                        <v-flex xs5>
-                            <v-text-field v-model="user.genger"></v-text-field>
-                        </v-flex>
-                    </v-layout>
                     <h4 style="color: blue;" v-if='resultSave'>{{resultSave}}</h4>
                     <v-layout row>
                        
@@ -100,6 +99,9 @@
     export default {
         data() {
             return {
+                user:'',
+                date: new Date().toISOString().substr(0, 10),
+                menu: false,
                 editDate: false,
                 user: '',
                 valid: false,
@@ -118,6 +120,7 @@
             },
             saveChange() {
                 this.resultSave = null;
+                
                 if (this.$refs.form.validate()){
                     this.editUser({user: this.user})
                         .then(()=>{

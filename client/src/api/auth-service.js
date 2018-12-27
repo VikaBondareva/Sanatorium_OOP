@@ -44,5 +44,12 @@ export default {
             data: user,
             headers: authHeader()
         })
+    },
+    cancelBookingCard(){
+        return Axios.request({
+            method: 'DELETE',
+            url: '/api/users/cards',
+            headers: authHeader()
+        })
     }
 }   

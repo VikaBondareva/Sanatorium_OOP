@@ -21,30 +21,10 @@
                     <tbody v-for="(item, index) in items">
                         <tr>
                             <td>{{item.user.name}} {{item.user.surname}} {{item.user.patronymic}}</td>
-                            <td>{{getAge(item.birth.substr(0, 10))}}</td>
+                            <td>{{getAge(item.user.birth.substr(0, 10))}}</td>
                             <td>{{item.dateArrival.substr(0, 10)}}</td>
                             <td>{{item.dateDeparture.substr(0, 10)}}</td>
                         </tr>
-<!--
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>61</td>
-                            <td>2011/04/25</td>
-                            <td>$320,800</td>
-                        </tr>
-                        <tr>
-                            <td>Garrett Winters</td>
-                            <td>63</td>
-                            <td>2011/07/25</td>
-                            <td>$170,750</td>
-                        </tr>
-                        <tr>
-                            <td>Ashton Cox</td>
-                            <td>66</td>
-                            <td>2009/01/12</td>
-                            <td>$86,000</td>
-                        </tr>
--->
                     </tbody>
                 </table>
             </v-flex>

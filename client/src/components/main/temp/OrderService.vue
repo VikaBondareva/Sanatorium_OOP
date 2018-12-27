@@ -42,7 +42,7 @@
                                 </div>
                                 <div v-if="result.message!==''" style=" margin-top: 20px; margin-left: 20px;">
                                     <span style="color:#f34;">{{result.message}}</span>
-                                    <router-link to="/booking" v-if="error==errorCard">Зарегестрировать карточку</router-link>
+                                    <router-link to="/booking" v-if="result.message==errorCard">Зарегестрировать карточку</router-link>
                                 </div>
                             </div>
                         </div>
@@ -89,9 +89,9 @@
                     })
                     .catch((err) => {
                         this.result.success = true;
-                        if (err === "error date")
+                        if (err.data.message === "error date")
                             this.result.message = this.errorDate;
-                        else if (err === "error card")
+                        else if (err.data.message  === "error card")
                             this.result.message = this.errorCard;
                     })
             },

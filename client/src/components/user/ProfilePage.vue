@@ -1,32 +1,59 @@
 <template>
     <v-layout column fill-height style="min-heigth: 1000px;">
                <delete v-if='deleteShow' :order="order" :method="getUser"></delete>
-
+                <delete-card v-if="deleteCard"></delete-card>
         <v-layout column align-center>
             <h3 class="text-center font-weight-bold text-uppercase py-4">{{user.surname}} {{user.name}} {{user.patronymic}}</h3>
         </v-layout>
              <div class="card user-information">
                      <v-flex>
+                      <v-layout row>
+                    <div>
                       <v-btn color="rgb(69, 152, 152)" style="width: 250px;" @click="goToEditProfile">Редактировать профиль</v-btn>
-            <v-btn v-if="user.card!=={}" color="rgb(69, 152, 152)" style="width: 250px;" @click="cancelArrival">Отменить заезд</v-btn>
+                    </div>
+                      <div v-if="user.card.dateArrival" >
+                         <v-btn  color="rgb(69, 152, 152)" style="width: 250px;" @click="cancelArrival">Отменить заезд</v-btn>
 
-            <div>
-                <span >Email: {{user.email}}</span>
-        
-            </div>
-            <div>
-                <span >Телеофн: {{user.phone | checkField}}</span>
-        
-            </div>
-            <div>
-                <span >Дата рождения: {{user.birth | checkField}}</span>
-        
-            </div>
-            <div>
-                <span >адрес прописки: {{user.addres | checkField}}</span>
-        
-            </div>
-            <card-user :card='user.card' v-if="user.card!=={}"></card-user>
+                      </div>
+                      </v-layout>
+
+                    
+
+           
+                   <v-layout row mt-4 mb-2>
+                        <v-flex xs3>
+                            <span >Email: </span>
+                        </v-flex>
+                        <v-flex xs5>
+                             <span >{{user.email}}</span>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row mb-2>
+                        <v-flex xs3>
+                            <span >Телеофн:</span>
+                        </v-flex>
+                        <v-flex xs5>
+                            <span>{{user.phone | checkField}}</span>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row mb-2>
+                        <v-flex xs3>
+                            <span >Дата рождения: </span>
+                        </v-flex>
+                        <v-flex xs5>
+                            <span>{{user.birth | checkField}}</span>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row mb-2>
+                        <v-flex xs3>
+                            <span >Aдрес прописки:</span>
+                        </v-flex>
+                        <v-flex xs5>
+                            <span> {{user.addres | checkField}}</span>
+                        </v-flex>
+                    </v-layout>
+                    
+                        <card-user :card='user.card' v-if="user.card!=={}" ></card-user>
                     </v-flex>
             </div>
         
@@ -77,10 +104,12 @@
     import Delete from '../dialogs/Delete.vue'
     import EditDateOrder from './EditDateOrder.vue'
     import cardUser from './CardUser.vue'
+    import deleteCard from './DeleteCard.vue'
     export default {
         components:{
             Delete,
             cardUser,
+            deleteCard,
             "edit-date": EditDateOrder
         },
         data(){
@@ -88,16 +117,20 @@
                 order:'',
                 editDate: false,
                 deleteShow:false,
+                deleteCard: false,
                 user: ''
             }
         },
         methods: {
-            ...mapActions(['getCurrentUser', 'changeDateOfVisit', 'cancelBookingCard']),
+            ...mapActions(['getCurrentUser', 'changeDateOfVisit']),
             getUser() {
                 this.getCurrentUser()
                     .then(response=>{
                         this.user = response.data;
                     })
+            },
+            cancelArrival(){
+                this.deleteCard = true;
             },
             remove(order){
                 this.order=order;
@@ -110,9 +143,7 @@
             goToEditProfile(){
                 this.$router.push({name: 'editUser'})
             },
-            cancelArrival(){
-                this.cancelBookingCard()
-            }
+           
         },
         created() {
             this.getUser();
@@ -156,10 +187,10 @@
     .user-information {
         margin-top: 20px;
         margin-bottom: 20px;
-        padding: 20px;
-        height: 200px;
+        padding: 20px 50px;
+        height: 280px;
         font: 17px sans-serif !important;
-/*        border: 1px solid;*/
+        border: 1px solid;
     }
     .user-information div{
         

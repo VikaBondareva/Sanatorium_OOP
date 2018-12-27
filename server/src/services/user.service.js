@@ -13,7 +13,8 @@ module.exports = {
     orderService,
     deleteOrder,
     getCardsUser,
-    changeOrderDate
+    changeOrderDate,
+    deleteCard
 }
 
 async function getFullCurrentCardUser(id) {
@@ -52,7 +53,7 @@ async function update(id, userParam) {
             email: userParam.email,
             addres: userParam.addres,
             phone: userParam.phone,
-            bith: userParam.birth
+            birth: userParam.birth
         }, function(err, user){
             if(err) throw "invalid update user";
             else 
@@ -125,6 +126,19 @@ async function orderService(orderParam, idUser) {
 
 async function deleteOrder(id) {
     await Orders.findByIdAndRemove(id);
+}
+
+async function deleteCard(id){
+    const card = await Cards.findOne({user_id: id});
+    const orders =  await Orders.find({card_id: card._id});
+    orders.forEach(async (order)=>{
+        await Orders.findByIdAndRemove(order._id);
+    })
+    const schedules = await Schedule.find({card_id: card._id});
+    schedules.forEach(async (schedule)=>{
+        await Schedule.findByIdAndRemove(schedule._id);
+    })
+    await Cards.findByIdAndRemove(card._id);
 }
 
 async function getCardsUser(id) {

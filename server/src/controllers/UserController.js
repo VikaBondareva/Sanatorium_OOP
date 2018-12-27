@@ -9,7 +9,8 @@ module.exports={
     getFullCurrentCardUser,
     getCardsUser,
     getOrdersUser,
-    changeOrderDate
+    changeOrderDate,
+    deleteCard
 }
 
 function changeOrderDate(req, res, next){
@@ -32,6 +33,12 @@ function update(req,res,next){
 function createCard(req,res,next){
 	userService.createCard(req.userId,req.body)
 		.then(()=>res.json({message: "Card saved"}))
+        .catch(err=>next(err))
+}
+
+function deleteCard(req,res,next){
+    userService.deleteCard(req.userId)
+		.then(()=>res.json({message: "card delete"}))
         .catch(err=>next(err))
 }
 

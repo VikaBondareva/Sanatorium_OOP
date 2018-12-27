@@ -21,7 +21,7 @@
                         <v-layout row>
                             <v-text-field v-model="user.phone" mask="+### (##) ###-##-##" label="Телефон"  type="text" readonly required>
                             </v-text-field>
-                             <v-text-field v-model="user.birth" label="Дата рождения"  type="text" readonly required>
+                             <v-text-field v-model="user.birth.toString().substr(0,10)" label="Дата рождения"  type="text" readonly required>
                             </v-text-field>
                         </v-layout>
                         <v-layout row>
